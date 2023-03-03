@@ -3,9 +3,10 @@ import wait from "../utilities/wait.js";
 import write from "../utilities/write.js";
 
 export default async () => {
-  const page = await puppeteer(false);
+  const browser = await puppeteer(false);
   console.log("1. Browser launched");
 
+  const page = await browser.newPage();
   const url = "https://about.instagram.com/blog";
   await page.goto(url);
   console.log("2. Page opened");
@@ -19,7 +20,7 @@ export default async () => {
   let loadMoreButton = await page.waitForSelector("button._afnw");
   await loadMoreButton.evaluate((el) => el.click());
   while (loadMoreButton) {
-    await wait(5000);
+    await wait(3000);
     await page
       .waitForSelector("button._afnw")
       .then((res) => {
@@ -47,7 +48,7 @@ export default async () => {
       });
       const hashtag =
         hashtagText && typeof hashtagText === "string"
-          ? hashtagText.toLowerCase().replace("#", "")
+          ? hashtagText.toLowerCase().replace("#", "").trim()
           : "";
       if (hashtag) {
         hashtags.push(hashtag);
@@ -75,6 +76,9 @@ export default async () => {
   const fileData = JSON.stringify(items);
   await write(fileName, fileData);
   console.log("6. Scrape process completed");
+
+  await browser.close();
+  console.log("7. Browser closed");
 
   return;
 };
