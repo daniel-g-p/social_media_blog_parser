@@ -13,13 +13,22 @@ export default async () => {
   );
   await acceptCookieButton.evaluate((el) => el.click());
 
+  console.log("First attempt");
+
   let loadMoreButton = await page.waitForSelector("button._afnw");
   await loadMoreButton.evaluate((el) => el.click());
 
   while (loadMoreButton) {
-    wait(5000);
-    loadMoreButton = await page.waitForSelector("button._afnw");
-    await loadMoreButton.evaluate((el) => el.click());
+    console.log("Loop attempt");
+    await wait(5000);
+    await page
+      .waitForSelector("button._afnw")
+      .then((res) => {
+        loadMoreButton = res;
+        return loadMoreButton.evaluate((el) => el.click());
+      })
+      .then(() => true)
+      .catch(() => false);
   }
 
   const liElements = await page.$$("li._agif._ajte");
