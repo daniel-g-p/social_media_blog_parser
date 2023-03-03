@@ -17,7 +17,7 @@ export default async () => {
   await loadMoreButton.evaluate((el) => el.click());
 
   while (loadMoreButton) {
-    wait(30000);
+    wait(5000);
     loadMoreButton = await page.waitForSelector("button._afnw");
     await loadMoreButton.evaluate((el) => el.click());
   }
