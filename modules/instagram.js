@@ -58,4 +58,6 @@ export default async () => {
   const fileName = "instagram-" + Date.now() + ".json";
   const fileData = JSON.stringify(items);
   await write(fileName, fileData);
+
+  return;
 };

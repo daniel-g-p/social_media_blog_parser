@@ -1,7 +1,8 @@
 import instagram from "./modules/instagram.js";
 
-const init = () => {
-  instagram();
+const init = async () => {
+  await instagram();
+  process.exit();
 };
 
 init();
