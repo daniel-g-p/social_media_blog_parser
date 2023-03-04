@@ -16,7 +16,7 @@ export default async () => {
     return el.parentElement.click();
   });
   await wait(3000);
-  console.log("3. News elements filtered by 'Facebook' category");
+  console.log("3. Blog elements filtered by 'Facebook' category");
 
   const containerElement = await page.$("div.archive-articles-container");
   let loadMoreButton = await page.waitForSelector("#show_more");
@@ -50,7 +50,7 @@ export default async () => {
     console.log("   More news elements loaded (" + lastChildTime + ")");
   }
   const liElements = await containerElement.$$("article.article-preview");
-  console.log("4. News elements loaded");
+  console.log("4. Blog elements loaded");
 
   const items = [];
   for (const liElement of liElements) {
@@ -94,7 +94,7 @@ export default async () => {
     const item = { title, preview, time, link, category };
     items.push(item);
   }
-  console.log("5. News elements parsed");
+  console.log("5. Blog elements parsed");
 
   const fileName = "./output/facebook-" + Date.now() + ".json";
   const fileData = JSON.stringify(items);
