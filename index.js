@@ -3,13 +3,15 @@ import instagram from "./modules/instagram.js";
 import stackoverflow from "./modules/stackoverflow.js";
 import pinterest from "./modules/pinterest.js";
 import youtube from "./modules/youtube.js";
+import linkedin from "./modules/linkedin.js";
 
 const init = async () => {
   // await instagram();
   // await facebook();
   // await stackoverflow();
-  await pinterest();
-  await youtube();
+  // await pinterest();
+  // await youtube();
+  await linkedin();
   // process.exit();
 };
 
