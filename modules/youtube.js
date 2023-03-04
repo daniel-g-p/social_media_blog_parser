@@ -81,7 +81,7 @@ export default async () => {
   console.log("5. Scrape process completed");
 
   await browser.close();
-  console.log("7. Browser closed");
+  console.log("6. Browser closed");
 
   return;
 };

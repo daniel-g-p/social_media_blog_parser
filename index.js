@@ -4,6 +4,7 @@ import stackoverflow from "./modules/stackoverflow.js";
 import pinterest from "./modules/pinterest.js";
 import youtube from "./modules/youtube.js";
 import linkedin from "./modules/linkedin.js";
+import snapchat from "./modules/snapchat.js";
 
 const init = async () => {
   // await instagram();
@@ -11,14 +12,14 @@ const init = async () => {
   // await stackoverflow();
   // await pinterest();
   // await youtube();
-  await linkedin();
+  // await linkedin();
+  await snapchat();
   // process.exit();
 };
 
 init();
 
 const urls = [
-  "https://newsroom.snap.com/news",
   "https://blog.twitter.com",
   "https://blog.whatsapp.com",
   "https://www.redditinc.com/blog",
