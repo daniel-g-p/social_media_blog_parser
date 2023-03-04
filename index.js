@@ -8,6 +8,7 @@ import snapchat from "./modules/snapchat.js";
 import twitter from "./modules/twitter.js";
 import whatsapp from "./modules/whatsapp.js";
 import reddit from "./modules/reddit.js";
+import tiktok from "./modules/tiktok.js";
 
 const init = async () => {
   // await instagram();
@@ -19,7 +20,8 @@ const init = async () => {
   // await snapchat();
   // await twitter();
   // await whatsapp();
-  await reddit();
+  // await reddit();
+  await tiktok();
   // process.exit();
 };
 
