@@ -6,6 +6,7 @@ import youtube from "./modules/youtube.js";
 import linkedin from "./modules/linkedin.js";
 import snapchat from "./modules/snapchat.js";
 import twitter from "./modules/twitter.js";
+import whatsapp from "./modules/whatsapp.js";
 
 const init = async () => {
   // await instagram();
@@ -15,7 +16,8 @@ const init = async () => {
   // await youtube();
   // await linkedin();
   // await snapchat();
-  await twitter();
+  // await twitter();
+  await whatsapp();
   // process.exit();
 };
 
