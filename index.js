@@ -7,6 +7,7 @@ import linkedin from "./modules/linkedin.js";
 import snapchat from "./modules/snapchat.js";
 import twitter from "./modules/twitter.js";
 import whatsapp from "./modules/whatsapp.js";
+import reddit from "./modules/reddit.js";
 
 const init = async () => {
   // await instagram();
@@ -17,14 +18,11 @@ const init = async () => {
   // await linkedin();
   // await snapchat();
   // await twitter();
-  await whatsapp();
+  // await whatsapp();
+  await reddit();
   // process.exit();
 };
 
 init();
 
-const urls = [
-  "https://blog.whatsapp.com",
-  "https://www.redditinc.com/blog",
-  "https://newsroom.tiktok.com",
-];
+const urls = ["https://www.redditinc.com/blog", "https://newsroom.tiktok.com"];
