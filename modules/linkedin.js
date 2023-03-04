@@ -14,6 +14,7 @@ export default async () => {
   let nextPageButton;
   const items = [];
   const scrapeItems = async () => {
+    console.log("Scraping items...");
     await wait(3000);
     const liElements = await page.$$("ul.post-list li.post-list-item");
     for (const liElement of liElements) {
@@ -71,10 +72,10 @@ export default async () => {
     );
   };
   await scrapeItems();
-//   while (nextPageButton) {
-//     await nextPageButton.evaluate((el) => el.click());
-//     await scrapeItems();
-//   }
+  while (nextPageButton) {
+    await nextPageButton.evaluate((el) => el.click());
+    await scrapeItems();
+  }
   console.log("3. Blog elements parsed");
 
   const fileName = "./output/linkedin-" + Date.now() + ".json";

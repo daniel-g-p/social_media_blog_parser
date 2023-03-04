@@ -18,10 +18,6 @@ const init = async () => {
 init();
 
 const urls = [
-  "https://stackoverflow.blog/announcements",
-  "https://newsroom.pinterest.com/en",
-  "https://blog.youtube/news-and-events",
-  "https://news.linkedin.com",
   "https://newsroom.snap.com/news",
   "https://blog.twitter.com",
   "https://blog.whatsapp.com",
