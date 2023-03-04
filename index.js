@@ -1,11 +1,15 @@
 import facebook from "./modules/facebook.js";
 import instagram from "./modules/instagram.js";
 import stackoverflow from "./modules/stackoverflow.js";
+import pinterest from "./modules/pinterest.js";
+import youtube from "./modules/youtube.js";
 
 const init = async () => {
   // await instagram();
   // await facebook();
-  await stackoverflow();
+  // await stackoverflow();
+  await pinterest();
+  await youtube();
   // process.exit();
 };
 
