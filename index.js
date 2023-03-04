@@ -21,10 +21,10 @@ const init = async () => {
   // await twitter();
   // await whatsapp();
   // await reddit();
-  await tiktok();
-  // process.exit();
+  // await tiktok();
+  process.exit();
 };
 
 init();
 
-const urls = ["https://www.redditinc.com/blog", "https://newsroom.tiktok.com"];
+// Quora, Medium, Hike, Viber, Line, Tumblr, Planoly,
