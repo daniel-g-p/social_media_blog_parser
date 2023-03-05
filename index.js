@@ -1035,10 +1035,10 @@ const init = async () => {
   // const instagramFileData = JSON.stringify(processedInstagramData);
   // await write(instagramFilePath, instagramFileData);
 
-  const processedLinkedinData = await processLinkedinData(linkedinData);
-  const linkedinFilePath = "./output/_linkedin" + ".json";
-  const linkedinFileData = JSON.stringify(processedLinkedinData);
-  await write(linkedinFilePath, linkedinFileData);
+  // const processedLinkedinData = await processLinkedinData(linkedinData);
+  // const linkedinFilePath = "./output/_linkedin" + ".json";
+  // const linkedinFileData = JSON.stringify(processedLinkedinData);
+  // await write(linkedinFilePath, linkedinFileData);
 
   // const processedPinterestData = await processPinterestData(pinterestData);
   // const pinterestFilePath = "./output/_pinterest" + ".json";
