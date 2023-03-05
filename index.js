@@ -1050,12 +1050,10 @@ const init = async () => {
   // const redditFileData = JSON.stringify(processedRedditData);
   // await write(redditFilePath, redditFileData);
 
-  const processedSnapchatData = await processSnapchatData(
-    snapchatData.slice(5, 10)
-  );
-  const snapchatFilePath = "./output/_snapchat" + ".json";
-  const snapchatFileData = JSON.stringify(processedSnapchatData);
-  await write(snapchatFilePath, snapchatFileData);
+  // const processedSnapchatData = await processSnapchatData(snapchatData);
+  // const snapchatFilePath = "./output/_snapchat" + ".json";
+  // const snapchatFileData = JSON.stringify(processedSnapchatData);
+  // await write(snapchatFilePath, snapchatFileData);
 
   // const processedStackoverflowData = await processStackoverflowData(
   //   stackoverflowData
@@ -1074,10 +1072,10 @@ const init = async () => {
   // const twitterFileData = JSON.stringify(processedTwitterData);
   // await write(twitterFilePath, twitterFileData);
 
-  // const processedWhatsappData = await processWhatsappData(whatsappData);
-  // const whatsappFilePath = "./output/_whatsapp" + ".json";
-  // const whatsappFileData = JSON.stringify(processedWhatsappData);
-  // await write(whatsappFilePath, whatsappFileData);
+  const processedWhatsappData = await processWhatsappData(whatsappData);
+  const whatsappFilePath = "./output/_whatsapp" + ".json";
+  const whatsappFileData = JSON.stringify(processedWhatsappData);
+  await write(whatsappFilePath, whatsappFileData);
 
   // const processedYoutubeData = await processYoutubeData(youtubeData);
   // const youtubeFilePath = "./output/_youtube" + ".json";
