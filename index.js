@@ -18,7 +18,7 @@ import wait from "./utilities/wait.js";
 import write from "./utilities/write.js";
 
 const processFacebookData = async (items) => {
-  const browser = await puppeteer(false);
+  const browser = await puppeteer(true);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -99,11 +99,12 @@ const processFacebookData = async (items) => {
       console.log("Error at i=" + i);
     }
   }
+  await browser.close();
   return announcements;
 };
 
 const processInstagramData = async (items) => {
-  const browser = await puppeteer(false);
+  const browser = await puppeteer(true);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -164,9 +165,7 @@ const processInstagramData = async (items) => {
         descriptionText && typeof descriptionText === "string"
           ? descriptionText.trim()
           : "";
-      const tags = item.hashtags.map((hashtag) => {
-        return hashtag.slice(0, 1).toUpperCase() + hashtag.slice(1);
-      });
+      const tags = item.hashtags;
       const author = "";
       const url = item.link;
       const newAnnouncement = announcement(
@@ -185,11 +184,12 @@ const processInstagramData = async (items) => {
       console.log("Error at i=" + i);
     }
   }
+  await browser.close();
   return announcements;
 };
 
 const processLinkedinData = async (items) => {
-  const browser = await puppeteer(false);
+  const browser = await puppeteer(true);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -235,19 +235,15 @@ const processLinkedinData = async (items) => {
         : "";
       const title =
         titleText && typeof titleText === "string" ? titleText.trim() : "";
-      const descriptionElement = await page.$(
-        'head meta[property="og:description"]'
-      );
+      const descriptionElement = await page.$("div.post-par p");
       const descriptionText = descriptionElement
-        ? await descriptionElement.evaluate((el) => el.getAttribute("content"))
+        ? await descriptionElement.evaluate((el) => el.textContent)
         : "";
       const description =
         descriptionText && typeof descriptionText === "string"
           ? descriptionText.trim()
           : "";
-      const tags = item.categories.map((item) => {
-        return item.slice(0, 1).toUpperCase() + item.slice(1);
-      });
+      const tags = item.categories;
       const author = item.author;
       const url = item.link;
       const newAnnouncement = announcement(
@@ -266,11 +262,12 @@ const processLinkedinData = async (items) => {
       console.log("Error at i=" + i);
     }
   }
+  await browser.close();
   return announcements;
 };
 
 const processPinterestData = async (items) => {
-  const browser = await puppeteer(false);
+  const browser = await puppeteer(true);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -314,7 +311,14 @@ const processPinterestData = async (items) => {
           : null;
       const date = new Date(dateYear, dateMonth, dateDay);
       const title = item.title;
-      const description = "";
+      const descriptionElement = await page.$("div.text-tile p");
+      const descriptionText = descriptionElement
+        ? await descriptionElement.evaluate((el) => el.textContent)
+        : "";
+      const description =
+        descriptionText && typeof descriptionText === "string"
+          ? descriptionText.trim()
+          : "";
       const tagElements = await page.$$("div.attribution__items a");
       const tags = [];
       for (const tagElement of tagElements) {
@@ -345,6 +349,633 @@ const processPinterestData = async (items) => {
       console.log("Error at i=" + i);
     }
   }
+  await browser.close();
+  return announcements;
+};
+
+const processRedditData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`Reddit (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateYear = item.date ? +item.date.split(", ")[1] : null;
+      const dateMonthString = item.date ? item.date.split(" ")[0] : "";
+      const dateMonth =
+        dateMonthString === "January"
+          ? 0
+          : dateMonthString === "February"
+          ? 1
+          : dateMonthString === "March"
+          ? 2
+          : dateMonthString === "April"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "June"
+          ? 5
+          : dateMonthString === "July"
+          ? 6
+          : dateMonthString === "August"
+          ? 7
+          : dateMonthString === "September"
+          ? 8
+          : dateMonthString === "October"
+          ? 9
+          : dateMonthString === "November"
+          ? 10
+          : dateMonthString === "December"
+          ? 11
+          : null;
+      const dateDay =
+        item.date && item.date.includes("/")
+          ? +item.date.split(" ")[1].split(",")[0]
+          : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElements = await page.$$("div.entry-content p");
+      const descriptionElementsLength = descriptionElements
+        ? descriptionElements.length
+        : 0;
+      let descriptionElementsCounter = 0;
+      let descriptionText = "";
+      while (
+        !descriptionText &&
+        descriptionElementsCounter < descriptionElementsLength
+      ) {
+        const element = descriptionElements[descriptionElementsCounter];
+        const text = element
+          ? await element.evaluate((el) => el.textContent)
+          : "";
+        if (text && typeof text === "string" && text.length > 100) {
+          descriptionText = text;
+        }
+        descriptionElementsCounter++;
+      }
+      const description = descriptionText ? descriptionText.trim() : "";
+      const tagElements = await page.$$("div.attribution__items a");
+      const tags = item.category ? [item.category] : [];
+      const author = item.author;
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "Reddit",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
+  return announcements;
+};
+
+const processSnapchatData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`Snapchat (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateText = await page
+        .$("h1")
+        .then((res) => {
+          if (res) {
+            return res.evaluate((el) => el.previousElementSibling.textContent);
+          }
+        })
+        .catch(() => null);
+      const dateYear = dateText ? +dateText.split(" ")[2] : null;
+      const dateMonthString = dateText ? dateText.split(" ")[1] : "";
+      const dateMonth =
+        dateMonthString === "January"
+          ? 0
+          : dateMonthString === "February"
+          ? 1
+          : dateMonthString === "March"
+          ? 2
+          : dateMonthString === "April"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "June"
+          ? 5
+          : dateMonthString === "July"
+          ? 6
+          : dateMonthString === "August"
+          ? 7
+          : dateMonthString === "September"
+          ? 8
+          : dateMonthString === "October"
+          ? 9
+          : dateMonthString === "November"
+          ? 10
+          : dateMonthString === "December"
+          ? 11
+          : null;
+      const dateDay = dateText ? +dateText.split(" ")[0] : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElement = await page.$("h1 + div");
+      const descriptionText = descriptionElement
+        ? await descriptionElement.evaluate((el) => el.textContent)
+        : "";
+      const description =
+        descriptionText && typeof descriptionText === "string"
+          ? descriptionText.trim()
+          : "";
+      const tags = [];
+      const author = "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "Snapchat",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
+  return announcements;
+};
+
+const processStackoverflowData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`Stack Overflow (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateText = item.date;
+      const dateYear = dateText ? +dateText.split(" ")[2] : null;
+      const dateMonthString = dateText ? dateText.split(" ")[0] : "";
+      const dateMonth =
+        dateMonthString === "January"
+          ? 0
+          : dateMonthString === "February"
+          ? 1
+          : dateMonthString === "March"
+          ? 2
+          : dateMonthString === "April"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "June"
+          ? 5
+          : dateMonthString === "July"
+          ? 6
+          : dateMonthString === "August"
+          ? 7
+          : dateMonthString === "September"
+          ? 8
+          : dateMonthString === "October"
+          ? 9
+          : dateMonthString === "November"
+          ? 10
+          : dateMonthString === "December"
+          ? 11
+          : null;
+      const dateDay = dateText
+        ? +dateText.split(" ")[1].replace(",", "")
+        : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElement = await page.$("h1 + div.lh-excerpt");
+      const descriptionText = descriptionElement
+        ? await descriptionElement.evaluate((el) => el.textContent)
+        : "";
+      const description =
+        descriptionText && typeof descriptionText === "string"
+          ? descriptionText.trim()
+          : "";
+      const tags = item.category ? [item.category] : [];
+      const authorElement = await page.$("div.author");
+      const authorText = authorElement
+        ? await authorElement.evaluate((el) => el.textContent)
+        : "";
+      const author =
+        authorText && typeof authorText === "string"
+          ? authorText.trim().replace("    \n    ", " - ")
+          : "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "Stack Overflow",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
+  return announcements;
+};
+
+const processTiktokData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`TikTok (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateText = item.date;
+      const dateYear = dateText ? +dateText.split(" ")[2] : null;
+      const dateMonthString = dateText ? dateText.split(" ")[0] : "";
+      const dateMonth =
+        dateMonthString === "Jan"
+          ? 0
+          : dateMonthString === "Feb"
+          ? 1
+          : dateMonthString === "Mar"
+          ? 2
+          : dateMonthString === "Apr"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "Jun"
+          ? 5
+          : dateMonthString === "Jul"
+          ? 6
+          : dateMonthString === "Aug"
+          ? 7
+          : dateMonthString === "Sep"
+          ? 8
+          : dateMonthString === "Oct"
+          ? 9
+          : dateMonthString === "Nov"
+          ? 10
+          : dateMonthString === "Dec"
+          ? 11
+          : null;
+      const dateDay = dateText
+        ? +dateText.split(" ")[1].replace(",", "")
+        : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElements = await page.$$("div.post-content p");
+      const descriptionElementsLength = descriptionElements
+        ? descriptionElements.length
+        : 0;
+      let descriptionElementsCounter = 0;
+      let descriptionText = "";
+      while (
+        !descriptionText &&
+        descriptionElementsCounter < descriptionElementsLength
+      ) {
+        const element = descriptionElements[descriptionElementsCounter];
+        const text = element
+          ? await element.evaluate((el) => el.textContent)
+          : "";
+        if (text && typeof text === "string" && text.length > 100) {
+          descriptionText = text;
+        }
+        descriptionElementsCounter++;
+      }
+      const description = descriptionText ? descriptionText.trim() : "";
+      const tags = item.category ? [item.category] : [];
+      const author = "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "TikTok",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
+  return announcements;
+};
+
+const processTwitterData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`Twitter (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateText = item.date;
+      const dateYear = dateText ? +dateText.split(" ")[3] : null;
+      const dateMonthString = dateText ? dateText.split(" ")[2] : "";
+      const dateMonth =
+        dateMonthString === "Jan"
+          ? 0
+          : dateMonthString === "Feb"
+          ? 1
+          : dateMonthString === "Mar"
+          ? 2
+          : dateMonthString === "Apr"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "Jun"
+          ? 5
+          : dateMonthString === "Jul"
+          ? 6
+          : dateMonthString === "Aug"
+          ? 7
+          : dateMonthString === "Sep"
+          ? 8
+          : dateMonthString === "Oct"
+          ? 9
+          : dateMonthString === "Nov"
+          ? 10
+          : dateMonthString === "Dec"
+          ? 11
+          : null;
+      const dateDay = dateText ? +dateText.split(" ")[1] : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElement = await page.$(
+        'head meta[property="og:description"]'
+      );
+      const descriptionText = descriptionElement
+        ? await descriptionElement.evaluate((el) => el.getAttribute("content"))
+        : "";
+      const description =
+        descriptionText && typeof descriptionText === "string"
+          ? descriptionText.trim()
+          : "";
+      const tagElements = await page.$$("div.post__tags li");
+      const tags = [];
+      for (const tagElement of tagElements) {
+        const tagText = tagElement
+          ? await tagElement.evaluate((el) => el.textContent)
+          : "";
+        const tag =
+          tagText && typeof tagText === "string" ? tagText.trim() : "";
+        if (tag) {
+          tags.push(tag);
+        }
+      }
+      if (item.category && !tags.includes(item.category)) {
+        tags.push(item.category);
+      }
+      const author = "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "Twitter",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
+  return announcements;
+};
+
+const processWhatsappData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`WhatsApp (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateText = item.date;
+      const dateYear = dateText ? +dateText.split(" ")[2] : null;
+      const dateMonthString = dateText ? dateText.split(" ")[0] : "";
+      const dateMonth =
+        dateMonthString === "January"
+          ? 0
+          : dateMonthString === "February"
+          ? 1
+          : dateMonthString === "March"
+          ? 2
+          : dateMonthString === "April"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "June"
+          ? 5
+          : dateMonthString === "July"
+          ? 6
+          : dateMonthString === "August"
+          ? 7
+          : dateMonthString === "September"
+          ? 8
+          : dateMonthString === "October"
+          ? 9
+          : dateMonthString === "November"
+          ? 10
+          : dateMonthString === "December"
+          ? 11
+          : null;
+      const dateDay = dateText
+        ? +dateText.split(" ")[1].replace(",", "")
+        : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElements = await page.$$("h1 ~ div._8l_f p");
+      const descriptionElementsLength = descriptionElements
+        ? descriptionElements.length
+        : 0;
+      let descriptionElementsCounter = 0;
+      let descriptionText = "";
+      while (
+        !descriptionText &&
+        descriptionElementsCounter < descriptionElementsLength
+      ) {
+        const element = descriptionElements[descriptionElementsCounter];
+        const text = element
+          ? await element.evaluate((el) => el.textContent)
+          : "";
+        if (text && typeof text === "string" && text.length > 100) {
+          descriptionText = text;
+        }
+        descriptionElementsCounter++;
+      }
+      const description = descriptionText ? descriptionText.trim() : "";
+      const tags = [];
+      const author = "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "WhatsApp",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
+  return announcements;
+};
+
+const processYoutubeData = async (items) => {
+  const browser = await puppeteer(true);
+  const page = await browser.newPage();
+  const announcements = [];
+  const n = items.length;
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`YouTube (${i + 1}/${n})`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(2500);
+      const dateText = item.date;
+      const dateYear = dateText ? +dateText.split(".")[2] : null;
+      const dateMonthString = dateText ? dateText.split(".")[0] : "";
+      const dateMonth =
+        dateMonthString === "Jan"
+          ? 0
+          : dateMonthString === "Feb"
+          ? 1
+          : dateMonthString === "Mar"
+          ? 2
+          : dateMonthString === "Apr"
+          ? 3
+          : dateMonthString === "May"
+          ? 4
+          : dateMonthString === "Jun"
+          ? 5
+          : dateMonthString === "Jul"
+          ? 6
+          : dateMonthString === "Aug"
+          ? 7
+          : dateMonthString === "Sep"
+          ? 8
+          : dateMonthString === "Oct"
+          ? 9
+          : dateMonthString === "Nov"
+          ? 10
+          : dateMonthString === "Dec"
+          ? 11
+          : null;
+      const dateDay = dateText ? +dateText.split(".")[1] : null;
+      const date = new Date(dateYear, dateMonth, dateDay);
+      const title = item.title;
+      const descriptionElement = await page.$('head meta[name="description"]');
+      const descriptionText = descriptionElement
+        ? await descriptionElement.evaluate((el) => el.getAttribute("content"))
+        : "";
+      const description =
+        descriptionText && typeof descriptionText === "string"
+          ? descriptionText.trim()
+          : "";
+      const tagElements = await page.$$("ul.yt-article-rel-tags__list li");
+      const tags = [];
+      for (const tagElement of tagElements) {
+        const tagText = tagElement
+          ? await tagElement.evaluate((el) => el.textContent)
+          : "";
+        const tag =
+          tagText && typeof tagText === "string" ? tagText.trim() : "";
+        if (tag) {
+          tags.push(tag);
+        }
+      }
+      if (item.category && !tags.includes(item.category)) {
+        tags.push(item.category);
+      }
+      const authorElement = await page.$(
+        "ul.yt-articlepage__page-title-container-author"
+      );
+      const authorText = authorElement
+        ? await authorElement.evaluate((el) => el.textContent)
+        : "";
+      const author =
+        authorText && typeof authorText === "string"
+          ? authorText.trim().slice(0, 3) === "By "
+            ? authorText
+                .trim()
+                .slice(3)
+                .replace(item.date, "")
+                .trim()
+                .replace("\n            \n              ", " - ")
+            : authorText
+                .replace(item.date, "")
+                .trim()
+                .replace("\n            \n              ", " - ")
+          : "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "YouTube",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        announcements.push(newAnnouncement);
+      }
+    } catch {
+      console.log("Error at i=" + i);
+    }
+  }
+  await browser.close();
   return announcements;
 };
 
@@ -378,7 +1009,7 @@ const init = async () => {
   const snapchatData = await read("./output/snapchat-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const stackoverflowData = await read("./output/stackoverflow-20230305.json")
+  const stackoverflowData = await read("./output/stackoverflow-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
   const tiktokData = await read("./output/tiktok-20230304.json")
@@ -395,24 +1026,61 @@ const init = async () => {
     .then((res) => JSON.parse(res));
 
   // const processedFacebookData = await processFacebookData(facebookData);
-  // const facebookFilePath = "./output/facebook-" + Date.now() + ".json";
+  // const facebookFilePath = "./output/_facebook" + ".json";
   // const facebookFileData = JSON.stringify(processedFacebookData);
   // await write(facebookFilePath, facebookFileData);
 
   // const processedInstagramData = await processInstagramData(instagramData);
-  // const instagramFilePath = "./output/instagram-" + Date.now() + ".json";
+  // const instagramFilePath = "./output/_instagram" + ".json";
   // const instagramFileData = JSON.stringify(processedInstagramData);
   // await write(instagramFilePath, instagramFileData);
 
-  // const processedLinkedinData = await processLinkedinData(linkedinData);
-  // const linkedinFilePath = "./output/linkedin-" + Date.now() + ".json";
-  // const linkedinFileData = JSON.stringify(processedLinkedinData);
-  // await write(linkedinFilePath, linkedinFileData);
+  const processedLinkedinData = await processLinkedinData(linkedinData);
+  const linkedinFilePath = "./output/_linkedin" + ".json";
+  const linkedinFileData = JSON.stringify(processedLinkedinData);
+  await write(linkedinFilePath, linkedinFileData);
 
   // const processedPinterestData = await processPinterestData(pinterestData);
-  // const pinterestFilePath = "./output/pinterest-" + Date.now() + ".json";
+  // const pinterestFilePath = "./output/_pinterest" + ".json";
   // const pinterestFileData = JSON.stringify(processedPinterestData);
   // await write(pinterestFilePath, pinterestFileData);
+
+  // const processedRedditData = await processRedditData(redditData);
+  // const redditFilePath = "./output/_reddit" + ".json";
+  // const redditFileData = JSON.stringify(processedRedditData);
+  // await write(redditFilePath, redditFileData);
+
+  // const processedSnapchatData = await processSnapchatData(snapchatData);
+  // const snapchatFilePath = "./output/_snapchat" + ".json";
+  // const snapchatFileData = JSON.stringify(processedSnapchatData);
+  // await write(snapchatFilePath, snapchatFileData);
+
+  // const processedStackoverflowData = await processStackoverflowData(
+  //   stackoverflowData
+  // );
+  // const stackoverflowFilePath = "./output/_stackoverflow" + ".json";
+  // const stackoverflowFileData = JSON.stringify(processedStackoverflowData);
+  // await write(stackoverflowFilePath, stackoverflowFileData);
+
+  // const processedTiktokData = await processTiktokData(tiktokData);
+  // const tiktokFilePath = "./output/_tiktok" + ".json";
+  // const tiktokFileData = JSON.stringify(processedTiktokData);
+  // await write(tiktokFilePath, tiktokFileData);
+
+  // const processedTwitterData = await processTwitterData(twitterData);
+  // const twitterFilePath = "./output/_twitter" + ".json";
+  // const twitterFileData = JSON.stringify(processedTwitterData);
+  // await write(twitterFilePath, twitterFileData);
+
+  // const processedWhatsappData = await processWhatsappData(whatsappData);
+  // const whatsappFilePath = "./output/_whatsapp" + ".json";
+  // const whatsappFileData = JSON.stringify(processedWhatsappData);
+  // await write(whatsappFilePath, whatsappFileData);
+
+  // const processedYoutubeData = await processYoutubeData(youtubeData);
+  // const youtubeFilePath = "./output/_youtube" + ".json";
+  // const youtubeFileData = JSON.stringify(processedYoutubeData);
+  // await write(youtubeFilePath, youtubeFileData);
 
   process.exit();
 };

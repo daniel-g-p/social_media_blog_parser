@@ -35,7 +35,7 @@ export default async () => {
         : "";
       const link =
         linkText && typeof linkText === "string"
-          ? "https://newsroom.pinterest.com" + linkText.toLowerCase().trim()
+          ? "https://blog.whatsapp.com" + linkText.toLowerCase().trim()
           : "";
       const dateElement = await liElement.$("article._9ta2");
       const dateText = dateElement

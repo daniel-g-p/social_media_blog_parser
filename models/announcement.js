@@ -25,10 +25,7 @@ export default (platform, date, title, description, tags, author, url) => {
         ? tags
         : [],
     author: typeof author === "string" ? author.trim() : "",
-    url:
-      typeof url === "string" && validateUrl(url)
-        ? url.toLowerCase().trim()
-        : "",
+    url: typeof url === "string" ? url.toLowerCase().trim() : "",
   };
   return model.platform && model.date && model.title && model.url
     ? model
