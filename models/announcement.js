@@ -3,17 +3,17 @@ import validateUrl from "../utilities/validate-url.js";
 export default (platform, date, title, description, tags, author, url) => {
   const model = {
     platform: [
-      "facebook",
-      "instagram",
-      "linkedin",
-      "pinterest",
-      "reddit",
-      "snapchat",
-      "stackoverflow",
-      "tiktok",
-      "twitter",
-      "whatsapp",
-      "youtube",
+      "Facebook",
+      "Instagram",
+      "LinkedIn",
+      "Pinterest",
+      "Reddit",
+      "Snapchat",
+      "Stack Overflow",
+      "TikTok",
+      "Twitter",
+      "WhatsApp",
+      "YouTube",
     ].includes(platform)
       ? platform
       : "",
