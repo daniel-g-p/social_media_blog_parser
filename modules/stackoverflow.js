@@ -7,14 +7,18 @@ export default async () => {
   console.log("1. Browser launched");
 
   const page = await browser.newPage();
-  const url = "https://stackoverflow.blog/announcements";
+  const url = "https://stackoverflow.blog/company";
   await page.goto(url);
   console.log("2. Page opened");
+
+  let i = 1;
 
   let nextPageButton;
   const items = [];
   const scrapeItems = async () => {
     await wait(3000);
+    console.log("Page " + i);
+    i++;
     const liElements = await page.$$("div.grid.ff-row-wrap > div");
     for (const liElement of liElements) {
       const categoryElement = await liElement.$("a.s-tag");
