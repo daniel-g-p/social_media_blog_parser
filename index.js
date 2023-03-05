@@ -443,7 +443,7 @@ const processRedditData = async (items) => {
 };
 
 const processSnapchatData = async (items) => {
-  const browser = await puppeteer(true);
+  const browser = await puppeteer(false);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -1050,10 +1050,12 @@ const init = async () => {
   // const redditFileData = JSON.stringify(processedRedditData);
   // await write(redditFilePath, redditFileData);
 
-  // const processedSnapchatData = await processSnapchatData(snapchatData);
-  // const snapchatFilePath = "./output/_snapchat" + ".json";
-  // const snapchatFileData = JSON.stringify(processedSnapchatData);
-  // await write(snapchatFilePath, snapchatFileData);
+  const processedSnapchatData = await processSnapchatData(
+    snapchatData.slice(5, 10)
+  );
+  const snapchatFilePath = "./output/_snapchat" + ".json";
+  const snapchatFileData = JSON.stringify(processedSnapchatData);
+  await write(snapchatFilePath, snapchatFileData);
 
   // const processedStackoverflowData = await processStackoverflowData(
   //   stackoverflowData
