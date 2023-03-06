@@ -1054,21 +1054,21 @@ const init = async () => {
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
 
-  // const _linkedin = await read("./output/_linkedin.json")
-  //   .then((res) => res.toString())
-  //   .then((res) => JSON.parse(res));
-  // const linkedinMissing = linkedinData
-  //   .filter((item1) => {
-  //     const found = _linkedin.find((item2) => {
-  //       return item2.url === item1.link;
-  //     });
-  //     return found ? false : true;
-  //   })
-  //   .map((item) => {
-  //     return { url: item.link, date: item.date, title: item.title };
-  //   });
-  // console.log(linkedinMissing);
-  // console.log(linkedinMissing.length);
+  const _linkedin = await read("./output/_linkedin.json")
+    .then((res) => res.toString())
+    .then((res) => JSON.parse(res));
+  const linkedinMissing = linkedinData
+    .filter((item1) => {
+      const found = _linkedin.find((item2) => {
+        return item2.url === item1.link;
+      });
+      return found ? false : true;
+    })
+    .map((item) => {
+      return { url: item.link, date: item.date, title: item.title };
+    });
+  console.log(linkedinMissing);
+  console.log(linkedinMissing.length);
 
   // const processedFacebookData = await processFacebookData(facebookData);
   // const facebookFilePath = "./output/_facebook" + ".json";
@@ -1080,10 +1080,10 @@ const init = async () => {
   // const instagramFileData = JSON.stringify(processedInstagramData);
   // await write(instagramFilePath, instagramFileData);
 
-  const processedLinkedinData = await processLinkedinData(linkedinData);
-  const linkedinFilePath = "./output/_linkedin-" + Date.now() + ".json";
-  const linkedinFileData = JSON.stringify(processedLinkedinData);
-  await write(linkedinFilePath, linkedinFileData);
+  // const processedLinkedinData = await processLinkedinData(linkedinData);
+  // const linkedinFilePath = "./output/_linkedin-" + Date.now() + ".json";
+  // const linkedinFileData = JSON.stringify(processedLinkedinData);
+  // await write(linkedinFilePath, linkedinFileData);
 
   // const processedPinterestData = await processPinterestData(pinterestData);
   // const pinterestFilePath = "./output/_pinterest" + Date.now() + ".json";
