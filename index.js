@@ -104,7 +104,7 @@ const processFacebookData = async (items) => {
 };
 
 const processInstagramData = async (items) => {
-  const browser = await puppeteer(true);
+  const browser = await puppeteer(false);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -114,14 +114,21 @@ const processInstagramData = async (items) => {
       const item = items[i];
       await page.goto(item.link);
       await wait(5000);
-      const dateElement = await page.$("p._a8td._abs4");
-      const dateText = dateElement
-        ? await dateElement
-            .evaluate((el) => el.textContent)
-            .then((res) => (res && typeof res === "string" ? res.trim() : ""))
-            .catch(() => "")
-        : "";
-      const dateYear = dateText ? +dateText.split(", ")[1] : null;
+      const dateElements = await page.$$("div._8hlz p._a8td._abs4");
+      let dateText = "";
+      let dateElementsCounter = 0;
+      const dateElementsLength = dateElements.length;
+      while (!dateText && dateElementsCounter < dateElementsLength) {
+        const element = dateElements[dateElementsCounter];
+        const text = element
+          ? await element.evaluate((el) => el.textContent)
+          : "";
+        if (text) {
+          dateText = text;
+        }
+        dateElementsCounter++;
+      }
+      const dateYear = dateText ? +dateText.split(" ")[2] : null;
       const dateMonthString = dateText ? dateText.split(" ")[0] : "";
       const dateMonth =
         dateMonthString === "January"
@@ -149,7 +156,9 @@ const processInstagramData = async (items) => {
           : dateMonthString === "December"
           ? 11
           : null;
-      const dateDay = dateText ? +dateText.split(" ")[1].split(",")[0] : null;
+      const dateDay = dateText
+        ? +dateText.split(" ")[1].replace(",", "")
+        : null;
       const date = new Date(dateYear, dateMonth, dateDay);
       const titleElement = await page.$("h1._a8td._a6sv._a4km");
       const titleText = titleElement
@@ -462,7 +471,7 @@ const processSnapchatData = async (items) => {
         })
         .catch(() => null);
       const dateYear = dateText ? +dateText.split(" ")[2] : null;
-      const dateMonthString = dateText ? dateText.split(" ")[1] : "";
+      const dateMonthString = dateText ? dateText.split(" ")[0] : "";
       const dateMonth =
         dateMonthString === "January"
           ? 0
@@ -489,7 +498,9 @@ const processSnapchatData = async (items) => {
           : dateMonthString === "December"
           ? 11
           : null;
-      const dateDay = dateText ? +dateText.split(" ")[0] : null;
+      const dateDay = dateText
+        ? +dateText.split(" ")[1].replace(",", "")
+        : null;
       const date = new Date(dateYear, dateMonth, dateDay);
       const title = item.title;
       const descriptionElement = await page.$("h1 + div");
@@ -1025,12 +1036,12 @@ const init = async () => {
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
 
-  // const _whatsapp = await read("./output/_whatsapp.json")
+  // const _youtube = await read("./output/_youtube.json")
   //   .then((res) => res.toString())
   //   .then((res) => JSON.parse(res));
-  // const whatsappMissing = whatsappData
+  // const youtubeMissing = youtubeData
   //   .filter((item1) => {
-  //     const found = _whatsapp.find((item2) => {
+  //     const found = _youtube.find((item2) => {
   //       return item2.url === item1.link;
   //     });
   //     return found ? false : true;
@@ -1038,18 +1049,20 @@ const init = async () => {
   //   .map((item) => {
   //     return { url: item.link, date: item.date, title: item.title };
   //   });
-  // console.log(whatsappMissing);
-  // console.log(whatsappMissing.length);
+  // console.log(youtubeMissing);
+  // console.log(youtubeMissing.length);
 
   // const processedFacebookData = await processFacebookData(facebookData);
-  // const facebookFilePath = "./output/_facebook" + ".json";
+  // const facebookFilePath = "./output/_facebook-" + Date.now() + ".json";
   // const facebookFileData = JSON.stringify(processedFacebookData);
   // await write(facebookFilePath, facebookFileData);
 
-  // const processedInstagramData = await processInstagramData(instagramData);
-  // const instagramFilePath = "./output/_instagram" + ".json";
-  // const instagramFileData = JSON.stringify(processedInstagramData);
-  // await write(instagramFilePath, instagramFileData);
+  const processedInstagramData = await processInstagramData(
+    instagramData.slice(80, 83)
+  );
+  const instagramFilePath = "./output/_instagram-" + Date.now() + ".json";
+  const instagramFileData = JSON.stringify(processedInstagramData);
+  await write(instagramFilePath, instagramFileData);
 
   // const processedLinkedinData = await processLinkedinData(linkedinData);
   // const linkedinFilePath = "./output/_linkedin-" + Date.now() + ".json";
@@ -1078,14 +1091,7 @@ const init = async () => {
   // const stackoverflowFileData = JSON.stringify(processedStackoverflowData);
   // await write(stackoverflowFilePath, stackoverflowFileData);
 
-  // const processedTiktokData = await processTiktokData(
-  //   tiktokData.filter((item1) => {
-  //     const found = _tiktok.find((item2) => {
-  //       return item2.url === item1.link;
-  //     });
-  //     return found ? false : true;
-  //   })
-  // );
+  // const processedTiktokData = await processTiktokData(tiktokData);
   // const tiktokFilePath = "./output/_tiktok" + Date.now() + ".json";
   // const tiktokFileData = JSON.stringify(processedTiktokData);
   // await write(tiktokFilePath, tiktokFileData);
@@ -1095,26 +1101,10 @@ const init = async () => {
   // const twitterFileData = JSON.stringify(processedTwitterData);
   // await write(twitterFilePath, twitterFileData);
 
-  const processedWhatsappData = await processWhatsappData([
-    {
-      link: "https://blog.whatsapp.com/end-to-end-encrypted-backups-on-whatsapp",
-      date: "TweetShare",
-      title: "End-to-End Encrypted Backups on WhatsApp",
-    },
-    {
-      link: "https://blog.whatsapp.com/end-to-end-encrypted-backups-on-whatsapp",
-      date: "TweetShare",
-      title: "End-to-End Encrypted Backups on WhatsApp",
-    },
-    {
-      link: "https://blog.whatsapp.com/end-to-end-encrypted-backups-on-whatsapp",
-      date: "TweetShare",
-      title: "End-to-End Encrypted Backups on WhatsApp",
-    },
-  ]);
-  const whatsappFilePath = "./output/_whatsapp" + Date.now() + ".json";
-  const whatsappFileData = JSON.stringify(processedWhatsappData);
-  await write(whatsappFilePath, whatsappFileData);
+  // const processedWhatsappData = await processWhatsappData(whatsappData);
+  // const whatsappFilePath = "./output/_whatsapp" + Date.now() + ".json";
+  // const whatsappFileData = JSON.stringify(processedWhatsappData);
+  // await write(whatsappFilePath, whatsappFileData);
 
   // const processedYoutubeData = await processYoutubeData(youtubeData);
   // const youtubeFilePath = "./output/_youtube" + Date.now() + ".json";
