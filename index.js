@@ -1012,9 +1012,9 @@ const init = async () => {
   // const facebookData = await read("./output/facebook-20230304.json")
   //   .then((res) => res.toString())
   //   .then((res) => JSON.parse(res));
-  const instagramData = await read("./output/instagram-20230304.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
+  // const instagramData = await read("./output/instagram-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
   // const linkedinData = await read("./output/linkedin-20230304.json")
   //   .then((res) => res.toString())
   //   .then((res) => JSON.parse(res));
@@ -1043,82 +1043,69 @@ const init = async () => {
   //   .then((res) => res.toString())
   //   .then((res) => JSON.parse(res));
 
-  const _facebookData = await read("./output/_facebook.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
+  // const _facebookData = await read("./output/_facebook.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
   // const _instagramData = await read("./output/_instagram.json")
   //   .then((res) => res.toString())
   //   .then((res) => JSON.parse(res));
-  const _linkedinData = await read("./output/_linkedin.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _pinterestData = await read("./output/_pinterest.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _redditData = await read("./output/_reddit.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _snapchatData = await read("./output/_snapchat.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _stackoverflowData = await read("./output/_stackoverflow.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _tiktokData = await read("./output/_tiktok.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _twitterData = await read("./output/_twitter.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _whatsappData = await read("./output/_whatsapp.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const _youtubeData = await read("./output/_youtube.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
+  // const _linkedinData = await read("./output/_linkedin.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _pinterestData = await read("./output/_pinterest.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _redditData = await read("./output/_reddit.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _snapchatData = await read("./output/_snapchat.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _stackoverflowData = await read("./output/_stackoverflow.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _tiktokData = await read("./output/_tiktok.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _twitterData = await read("./output/_twitter.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _whatsappData = await read("./output/_whatsapp.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const _youtubeData = await read("./output/_youtube.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
 
-  const _data = [
-    ..._facebookData,
-    // ..._instagramData,
-    ..._linkedinData,
-    ..._pinterestData,
-    ..._redditData,
-    ..._snapchatData,
-    ..._stackoverflowData,
-    ..._tiktokData,
-    ..._twitterData,
-    ..._whatsappData,
-    ..._youtubeData,
-  ].sort((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
-    return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
-  });
-  await write("./output/_data.json", JSON.stringify(_data));
-  //   .map((item) => {
-  //     return [
-  //       item.platform,
-  //       item.date,
-  //       item.title,
-  //       item.description,
-  //       item.tags.join(","),
-  //       item.author,
-  //       item.url,
-  //     ];
-  //   });
-  // _data.splice(0, 0, [
-  //   "Platform",
-  //   "Date",
-  //   "Title",
-  //   "Description",
-  //   "Tags",
-  //   "Author",
-  //   "URL",
-  // ]);
-  // const workbook = XLSX.utils.book_new();
-  // const worksheet = XLSX.utils.aoa_to_sheet(_data);
-  // XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-  // XLSX.writeFile(workbook, "./output/data.xlsx");
+  const _data = await read("./output/_data.json")
+    .then((res) => res.toString())
+    .then((res) => JSON.parse(res))
+    .then((res) => {
+      return res.map((item) => {
+        return [
+          item.platform,
+          item.date,
+          item.title,
+          item.description,
+          item.tags.join(","),
+          item.author,
+          item.url,
+        ];
+      });
+    });
+  _data.splice(0, 0, [
+    "Platform",
+    "Date",
+    "Title",
+    "Description",
+    "Tags",
+    "Author",
+    "URL",
+  ]);
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet(_data);
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+  XLSX.writeFile(workbook, "./output/data.xlsx");
 
   // const _youtube = await read("./output/_youtube.json")
   //   .then((res) => res.toString())
