@@ -1,0 +1,47 @@
+[
+  {
+    "platform": "Instagram",
+    "date": "2023-02-15T23:00:00.000Z",
+    "title": "Introducing Broadcast Channels, a New Way for Creators to Deepen Connections with Followers",
+    "description": "Today, we are introducing broadcast channels that offer creators a one-to-many messaging tool that invites all of their followers to engage with them.",
+    "tags": ["creators", "announcements", "instagram"],
+    "author": "",
+    "url": "https://about.instagram.com/blog/announcements/introducing-broadcast-channels"
+  },
+  {
+    "platform": "Instagram",
+    "date": "2023-01-18T23:00:00.000Z",
+    "title": "Giving People Control Over Their Time and What They See on Instagram",
+    "description": "Today, we're launching quiet mode on Instagram along with other new features that give people more control of their experience on Instagram.",
+    "tags": ["announcements", "product"],
+    "author": "",
+    "url": "https://about.instagram.com/blog/announcements/new-ways-to-control-what-you-see-on-instagram"
+  },
+  {
+    "platform": "Instagram",
+    "date": "2022-12-05T23:00:00.000Z",
+    "title": "The 2023 Instagram Trend Report",
+    "description": "Explore our 2023 Instagram Trend Report to discover what trends will be on the rise in the next year across the platform.",
+    "tags": ["announcements", "instagram"],
+    "author": "",
+    "url": "https://about.instagram.com/blog/announcements/instagram-trends-2023"
+  },
+  {
+    "platform": "Instagram",
+    "date": "2022-11-30T23:00:00.000Z",
+    "title": "Bringing photography to life with Meta Spark",
+    "description": "Instagram uses Spark AR to present and amplify Tomás Karmelo Amaya photography exhibit.",
+    "tags": ["creators", "announcements", "design"],
+    "author": "",
+    "url": "https://about.instagram.com/blog/announcements/bringing-photography-to-life-with-meta-spark"
+  },
+  {
+    "platform": "Instagram",
+    "date": "1899-12-30T23:00:00.000Z",
+    "title": "Ensuring Black Voices are Heard",
+    "description": "In the last few weeks, we’ve seen an incredible movement happening around the world. As these important conversations have come to our platform, we’ve seen communities on Instagram mobilizing to demand justice and express solidarity, support Black-owned businesses, elevate Black voices, and raise awareness for the equality of Black people everywhere.",
+    "tags": ["instagram", "announcements", "safety"],
+    "author": "",
+    "url": "https://about.instagram.com/blog/announcements/ensuring-black-voices-are-heard"
+  }
+]

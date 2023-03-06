@@ -443,7 +443,7 @@ const processRedditData = async (items) => {
 };
 
 const processSnapchatData = async (items) => {
-  const browser = await puppeteer(false);
+  const browser = await puppeteer(true);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -1050,10 +1050,10 @@ const init = async () => {
   // const redditFileData = JSON.stringify(processedRedditData);
   // await write(redditFilePath, redditFileData);
 
-  // const processedSnapchatData = await processSnapchatData(snapchatData);
-  // const snapchatFilePath = "./output/_snapchat" + ".json";
-  // const snapchatFileData = JSON.stringify(processedSnapchatData);
-  // await write(snapchatFilePath, snapchatFileData);
+  const processedSnapchatData = await processSnapchatData(snapchatData);
+  const snapchatFilePath = "./output/_snapchat" + ".json";
+  const snapchatFileData = JSON.stringify(processedSnapchatData);
+  await write(snapchatFilePath, snapchatFileData);
 
   // const processedStackoverflowData = await processStackoverflowData(
   //   stackoverflowData
@@ -1062,25 +1062,25 @@ const init = async () => {
   // const stackoverflowFileData = JSON.stringify(processedStackoverflowData);
   // await write(stackoverflowFilePath, stackoverflowFileData);
 
-  // const processedTiktokData = await processTiktokData(tiktokData);
-  // const tiktokFilePath = "./output/_tiktok" + ".json";
-  // const tiktokFileData = JSON.stringify(processedTiktokData);
-  // await write(tiktokFilePath, tiktokFileData);
+  const processedTiktokData = await processTiktokData(tiktokData);
+  const tiktokFilePath = "./output/_tiktok" + ".json";
+  const tiktokFileData = JSON.stringify(processedTiktokData);
+  await write(tiktokFilePath, tiktokFileData);
 
-  // const processedTwitterData = await processTwitterData(twitterData);
-  // const twitterFilePath = "./output/_twitter" + ".json";
-  // const twitterFileData = JSON.stringify(processedTwitterData);
-  // await write(twitterFilePath, twitterFileData);
+  const processedTwitterData = await processTwitterData(twitterData);
+  const twitterFilePath = "./output/_twitter" + ".json";
+  const twitterFileData = JSON.stringify(processedTwitterData);
+  await write(twitterFilePath, twitterFileData);
 
-  const processedWhatsappData = await processWhatsappData(whatsappData);
-  const whatsappFilePath = "./output/_whatsapp" + ".json";
-  const whatsappFileData = JSON.stringify(processedWhatsappData);
-  await write(whatsappFilePath, whatsappFileData);
+  // const processedWhatsappData = await processWhatsappData(whatsappData);
+  // const whatsappFilePath = "./output/_whatsapp" + ".json";
+  // const whatsappFileData = JSON.stringify(processedWhatsappData);
+  // await write(whatsappFilePath, whatsappFileData);
 
-  // const processedYoutubeData = await processYoutubeData(youtubeData);
-  // const youtubeFilePath = "./output/_youtube" + ".json";
-  // const youtubeFileData = JSON.stringify(processedYoutubeData);
-  // await write(youtubeFilePath, youtubeFileData);
+  const processedYoutubeData = await processYoutubeData(youtubeData);
+  const youtubeFilePath = "./output/_youtube" + ".json";
+  const youtubeFileData = JSON.stringify(processedYoutubeData);
+  await write(youtubeFilePath, youtubeFileData);
 
   process.exit();
 };
