@@ -1105,7 +1105,7 @@ const init = async () => {
   const workbook = XLSX.utils.book_new();
   const worksheet = XLSX.utils.aoa_to_sheet(_data);
   XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-  XLSX.writeFile(workbook, "./output/data.xlsx");
+  XLSX.writeFile(workbook, "./output/_data.xlsx");
 
   // const _youtube = await read("./output/_youtube.json")
   //   .then((res) => res.toString())
