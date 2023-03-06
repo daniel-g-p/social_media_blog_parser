@@ -997,9 +997,38 @@ const init = async () => {
   const instagramData = await read("./output/instagram-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const linkedinData = await read("./output/linkedin-20230304.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
+  const linkedinData = [
+    {
+      link: "https://news.linkedin.com/2017/linkedin-reaches-500M-members",
+      date: "Apr 24, 2017",
+      title: "The power of LinkedIn’s 500 million member community",
+    },
+    {
+      link: "https://news.linkedin.com/2017/celebrate-earth-sustainability-at-LinkedIn",
+      date: "Apr 21, 2017",
+      title: "Celebrate Earth: Sustainability at LinkedIn",
+    },
+    {
+      link: "https://news.linkedin.com/2017/linkedin-data-shows-the-most-promising-jobs-in-the-healthcare-finance-and-software-and-IT-industries",
+      date: "Feb 7, 2017",
+      title: "LinkedIn data shows the most promising jobs in the...",
+    },
+    {
+      link: "https://news.linkedin.com/2016/introducing-audience-demographics-see-who-youre-reaching-when-you-post-content-on-LinkedIn",
+      date: "Oct 26, 2016",
+      title: "Introducing audience demographics: see who you're reaching ...",
+    },
+    {
+      link: "https://news.linkedin.com/2016/more-than-100M-professionals-APAC-connected-on-LinkedIn",
+      date: "Aug 10, 2016",
+      title: "More than 100 million professionals in Asia Pacific now...",
+    },
+    {
+      link: "https://news.linkedin.com/2016/linkedins-first-data-centre-outside-of-the-US-comes-online-in-Singapore",
+      date: "Apr 6, 2016",
+      title: "LinkedIn's first data centre outside of the U.S. comes...",
+    },
+  ];
   const pinterestData = await read("./output/pinterest-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
@@ -1025,6 +1054,22 @@ const init = async () => {
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
 
+  // const _linkedin = await read("./output/_linkedin.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const linkedinMissing = linkedinData
+  //   .filter((item1) => {
+  //     const found = _linkedin.find((item2) => {
+  //       return item2.url === item1.link;
+  //     });
+  //     return found ? false : true;
+  //   })
+  //   .map((item) => {
+  //     return { url: item.link, date: item.date, title: item.title };
+  //   });
+  // console.log(linkedinMissing);
+  // console.log(linkedinMissing.length);
+
   // const processedFacebookData = await processFacebookData(facebookData);
   // const facebookFilePath = "./output/_facebook" + ".json";
   // const facebookFileData = JSON.stringify(processedFacebookData);
@@ -1035,52 +1080,52 @@ const init = async () => {
   // const instagramFileData = JSON.stringify(processedInstagramData);
   // await write(instagramFilePath, instagramFileData);
 
-  // const processedLinkedinData = await processLinkedinData(linkedinData);
-  // const linkedinFilePath = "./output/_linkedin" + ".json";
-  // const linkedinFileData = JSON.stringify(processedLinkedinData);
-  // await write(linkedinFilePath, linkedinFileData);
+  const processedLinkedinData = await processLinkedinData(linkedinData);
+  const linkedinFilePath = "./output/_linkedin-" + Date.now() + ".json";
+  const linkedinFileData = JSON.stringify(processedLinkedinData);
+  await write(linkedinFilePath, linkedinFileData);
 
   // const processedPinterestData = await processPinterestData(pinterestData);
-  // const pinterestFilePath = "./output/_pinterest" + ".json";
+  // const pinterestFilePath = "./output/_pinterest" + Date.now() + ".json";
   // const pinterestFileData = JSON.stringify(processedPinterestData);
   // await write(pinterestFilePath, pinterestFileData);
 
   // const processedRedditData = await processRedditData(redditData);
-  // const redditFilePath = "./output/_reddit" + ".json";
+  // const redditFilePath = "./output/_reddit" + Date.now() + ".json";
   // const redditFileData = JSON.stringify(processedRedditData);
   // await write(redditFilePath, redditFileData);
 
-  const processedSnapchatData = await processSnapchatData(snapchatData);
-  const snapchatFilePath = "./output/_snapchat" + ".json";
-  const snapchatFileData = JSON.stringify(processedSnapchatData);
-  await write(snapchatFilePath, snapchatFileData);
+  // const processedSnapchatData = await processSnapchatData(snapchatData);
+  // const snapchatFilePath = "./output/_snapchat" + Date.now() + ".json";
+  // const snapchatFileData = JSON.stringify(processedSnapchatData);
+  // await write(snapchatFilePath, snapchatFileData);
 
   // const processedStackoverflowData = await processStackoverflowData(
   //   stackoverflowData
   // );
-  // const stackoverflowFilePath = "./output/_stackoverflow" + ".json";
+  // const stackoverflowFilePath = "./output/_stackoverflow" + Date.now() + ".json";
   // const stackoverflowFileData = JSON.stringify(processedStackoverflowData);
   // await write(stackoverflowFilePath, stackoverflowFileData);
 
-  const processedTiktokData = await processTiktokData(tiktokData);
-  const tiktokFilePath = "./output/_tiktok" + ".json";
-  const tiktokFileData = JSON.stringify(processedTiktokData);
-  await write(tiktokFilePath, tiktokFileData);
+  // const processedTiktokData = await processTiktokData(tiktokData);
+  // const tiktokFilePath = "./output/_tiktok" + Date.now() + ".json";
+  // const tiktokFileData = JSON.stringify(processedTiktokData);
+  // await write(tiktokFilePath, tiktokFileData);
 
-  const processedTwitterData = await processTwitterData(twitterData);
-  const twitterFilePath = "./output/_twitter" + ".json";
-  const twitterFileData = JSON.stringify(processedTwitterData);
-  await write(twitterFilePath, twitterFileData);
+  // const processedTwitterData = await processTwitterData(twitterData);
+  // const twitterFilePath = "./output/_twitter" + Date.now() + ".json";
+  // const twitterFileData = JSON.stringify(processedTwitterData);
+  // await write(twitterFilePath, twitterFileData);
 
   // const processedWhatsappData = await processWhatsappData(whatsappData);
-  // const whatsappFilePath = "./output/_whatsapp" + ".json";
+  // const whatsappFilePath = "./output/_whatsapp" + Date.now() + ".json";
   // const whatsappFileData = JSON.stringify(processedWhatsappData);
   // await write(whatsappFilePath, whatsappFileData);
 
-  const processedYoutubeData = await processYoutubeData(youtubeData);
-  const youtubeFilePath = "./output/_youtube" + ".json";
-  const youtubeFileData = JSON.stringify(processedYoutubeData);
-  await write(youtubeFilePath, youtubeFileData);
+  // const processedYoutubeData = await processYoutubeData(youtubeData);
+  // const youtubeFilePath = "./output/_youtube" + Date.now() + ".json";
+  // const youtubeFileData = JSON.stringify(processedYoutubeData);
+  // await write(youtubeFilePath, youtubeFileData);
 
   process.exit();
 };
