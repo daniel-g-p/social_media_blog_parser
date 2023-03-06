@@ -1,3 +1,5 @@
+import XLSX from "xlsx";
+
 import facebook from "./modules/facebook.js";
 import instagram from "./modules/instagram.js";
 import stackoverflow from "./modules/stackoverflow.js";
@@ -1007,39 +1009,116 @@ const init = async () => {
   // await whatsapp();
   // await reddit();
   // await tiktok();
-  const facebookData = await read("./output/facebook-20230304.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
+  // const facebookData = await read("./output/facebook-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
   const instagramData = await read("./output/instagram-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const linkedinData = await read("./output/linkedin-20230304.json")
+  // const linkedinData = await read("./output/linkedin-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const pinterestData = await read("./output/pinterest-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const redditData = await read("./output/reddit-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const snapchatData = await read("./output/snapchat-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const stackoverflowData = await read("./output/stackoverflow-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const tiktokData = await read("./output/tiktok-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const twitterData = await read("./output/twitter-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const whatsappData = await read("./output/whatsapp-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const youtubeData = await read("./output/youtube-20230304.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+
+  const _facebookData = await read("./output/_facebook.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const pinterestData = await read("./output/pinterest-20230304.json")
+  // const _instagramData = await read("./output/_instagram.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  const _linkedinData = await read("./output/_linkedin.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const redditData = await read("./output/reddit-20230304.json")
+  const _pinterestData = await read("./output/_pinterest.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const snapchatData = await read("./output/snapchat-20230304.json")
+  const _redditData = await read("./output/_reddit.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const stackoverflowData = await read("./output/stackoverflow-20230304.json")
+  const _snapchatData = await read("./output/_snapchat.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const tiktokData = await read("./output/tiktok-20230304.json")
+  const _stackoverflowData = await read("./output/_stackoverflow.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const twitterData = await read("./output/twitter-20230304.json")
+  const _tiktokData = await read("./output/_tiktok.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const whatsappData = await read("./output/whatsapp-20230304.json")
+  const _twitterData = await read("./output/_twitter.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const youtubeData = await read("./output/youtube-20230304.json")
+  const _whatsappData = await read("./output/_whatsapp.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
+  const _youtubeData = await read("./output/_youtube.json")
+    .then((res) => res.toString())
+    .then((res) => JSON.parse(res));
+
+  const _data = [
+    ..._facebookData,
+    // ..._instagramData,
+    ..._linkedinData,
+    ..._pinterestData,
+    ..._redditData,
+    ..._snapchatData,
+    ..._stackoverflowData,
+    ..._tiktokData,
+    ..._twitterData,
+    ..._whatsappData,
+    ..._youtubeData,
+  ].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateA < dateB ? 1 : dateA > dateB ? -1 : 0;
+  });
+  await write("./output/_data.json", JSON.stringify(_data));
+  //   .map((item) => {
+  //     return [
+  //       item.platform,
+  //       item.date,
+  //       item.title,
+  //       item.description,
+  //       item.tags.join(","),
+  //       item.author,
+  //       item.url,
+  //     ];
+  //   });
+  // _data.splice(0, 0, [
+  //   "Platform",
+  //   "Date",
+  //   "Title",
+  //   "Description",
+  //   "Tags",
+  //   "Author",
+  //   "URL",
+  // ]);
+  // const workbook = XLSX.utils.book_new();
+  // const worksheet = XLSX.utils.aoa_to_sheet(_data);
+  // XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+  // XLSX.writeFile(workbook, "./output/data.xlsx");
 
   // const _youtube = await read("./output/_youtube.json")
   //   .then((res) => res.toString())
@@ -1062,10 +1141,12 @@ const init = async () => {
   // const facebookFileData = JSON.stringify(processedFacebookData);
   // await write(facebookFilePath, facebookFileData);
 
-  const processedInstagramData = await processInstagramData(instagramData);
-  const instagramFilePath = "./output/_instagram-" + Date.now() + ".json";
-  const instagramFileData = JSON.stringify(processedInstagramData);
-  await write(instagramFilePath, instagramFileData);
+  // const processedInstagramData = await processInstagramData(
+  //   instagramData.slice(0, 50)
+  // );
+  // const instagramFilePath = "./output/_instagram-" + Date.now() + ".json";
+  // const instagramFileData = JSON.stringify(processedInstagramData);
+  // await write(instagramFilePath, instagramFileData);
 
   // const processedLinkedinData = await processLinkedinData(linkedinData);
   // const linkedinFilePath = "./output/_linkedin-" + Date.now() + ".json";
