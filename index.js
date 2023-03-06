@@ -104,7 +104,7 @@ const processFacebookData = async (items) => {
 };
 
 const processInstagramData = async (items) => {
-  const browser = await puppeteer(false);
+  const browser = await puppeteer(true);
   const page = await browser.newPage();
   const announcements = [];
   const n = items.length;
@@ -123,8 +123,8 @@ const processInstagramData = async (items) => {
         const text = element
           ? await element.evaluate((el) => el.textContent)
           : "";
-        if (text) {
-          dateText = text;
+        if (text && typeof text === "string") {
+          dateText = text.replace("Posted on", "").trim();
         }
         dateElementsCounter++;
       }
@@ -160,12 +160,14 @@ const processInstagramData = async (items) => {
         ? +dateText.split(" ")[1].replace(",", "")
         : null;
       const date = new Date(dateYear, dateMonth, dateDay);
-      const titleElement = await page.$("h1._a8td._a6sv._a4km");
+      const titleElement = await page.$("head title");
       const titleText = titleElement
         ? await titleElement.evaluate((el) => el.textContent)
         : "";
       const title =
-        titleText && typeof titleText === "string" ? titleText.trim() : "";
+        titleText && typeof titleText === "string"
+          ? titleText.replace("| Instagram Blog", "").trim()
+          : "";
       const descriptionElement = await page.$('head meta[name="description"]');
       const descriptionText = descriptionElement
         ? await descriptionElement.evaluate((el) => el.getAttribute("content"))
@@ -188,9 +190,12 @@ const processInstagramData = async (items) => {
       );
       if (newAnnouncement) {
         announcements.push(newAnnouncement);
+      } else {
+        console.log("Invalid data at i=" + i);
       }
-    } catch {
+    } catch (error) {
       console.log("Error at i=" + i);
+      console.error(error);
     }
   }
   await browser.close();
@@ -1057,9 +1062,7 @@ const init = async () => {
   // const facebookFileData = JSON.stringify(processedFacebookData);
   // await write(facebookFilePath, facebookFileData);
 
-  const processedInstagramData = await processInstagramData(
-    instagramData.slice(80, 83)
-  );
+  const processedInstagramData = await processInstagramData(instagramData);
   const instagramFilePath = "./output/_instagram-" + Date.now() + ".json";
   const instagramFileData = JSON.stringify(processedInstagramData);
   await write(instagramFilePath, instagramFileData);

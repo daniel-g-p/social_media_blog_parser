@@ -27,7 +27,6 @@ export default (platform, date, title, description, tags, author, url) => {
     author: typeof author === "string" ? author.trim() : "",
     url: typeof url === "string" ? url.toLowerCase().trim() : "",
   };
-  console.log(model);
   return model.platform && model.date && model.title && model.url
     ? model
     : null;
