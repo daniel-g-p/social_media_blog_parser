@@ -997,38 +997,9 @@ const init = async () => {
   const instagramData = await read("./output/instagram-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
-  const linkedinData = [
-    {
-      link: "https://news.linkedin.com/2017/linkedin-reaches-500M-members",
-      date: "Apr 24, 2017",
-      title: "The power of LinkedIn’s 500 million member community",
-    },
-    {
-      link: "https://news.linkedin.com/2017/celebrate-earth-sustainability-at-LinkedIn",
-      date: "Apr 21, 2017",
-      title: "Celebrate Earth: Sustainability at LinkedIn",
-    },
-    {
-      link: "https://news.linkedin.com/2017/linkedin-data-shows-the-most-promising-jobs-in-the-healthcare-finance-and-software-and-IT-industries",
-      date: "Feb 7, 2017",
-      title: "LinkedIn data shows the most promising jobs in the...",
-    },
-    {
-      link: "https://news.linkedin.com/2016/introducing-audience-demographics-see-who-youre-reaching-when-you-post-content-on-LinkedIn",
-      date: "Oct 26, 2016",
-      title: "Introducing audience demographics: see who you're reaching ...",
-    },
-    {
-      link: "https://news.linkedin.com/2016/more-than-100M-professionals-APAC-connected-on-LinkedIn",
-      date: "Aug 10, 2016",
-      title: "More than 100 million professionals in Asia Pacific now...",
-    },
-    {
-      link: "https://news.linkedin.com/2016/linkedins-first-data-centre-outside-of-the-US-comes-online-in-Singapore",
-      date: "Apr 6, 2016",
-      title: "LinkedIn's first data centre outside of the U.S. comes...",
-    },
-  ];
+  const linkedinData = await read("./output/linkedin-20230304.json")
+    .then((res) => res.toString())
+    .then((res) => JSON.parse(res));
   const pinterestData = await read("./output/pinterest-20230304.json")
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
@@ -1054,21 +1025,21 @@ const init = async () => {
     .then((res) => res.toString())
     .then((res) => JSON.parse(res));
 
-  const _linkedin = await read("./output/_linkedin.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res));
-  const linkedinMissing = linkedinData
-    .filter((item1) => {
-      const found = _linkedin.find((item2) => {
-        return item2.url === item1.link;
-      });
-      return found ? false : true;
-    })
-    .map((item) => {
-      return { url: item.link, date: item.date, title: item.title };
-    });
-  console.log(linkedinMissing);
-  console.log(linkedinMissing.length);
+  // const _whatsapp = await read("./output/_whatsapp.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res));
+  // const whatsappMissing = whatsappData
+  //   .filter((item1) => {
+  //     const found = _whatsapp.find((item2) => {
+  //       return item2.url === item1.link;
+  //     });
+  //     return found ? false : true;
+  //   })
+  //   .map((item) => {
+  //     return { url: item.link, date: item.date, title: item.title };
+  //   });
+  // console.log(whatsappMissing);
+  // console.log(whatsappMissing.length);
 
   // const processedFacebookData = await processFacebookData(facebookData);
   // const facebookFilePath = "./output/_facebook" + ".json";
@@ -1107,7 +1078,14 @@ const init = async () => {
   // const stackoverflowFileData = JSON.stringify(processedStackoverflowData);
   // await write(stackoverflowFilePath, stackoverflowFileData);
 
-  // const processedTiktokData = await processTiktokData(tiktokData);
+  // const processedTiktokData = await processTiktokData(
+  //   tiktokData.filter((item1) => {
+  //     const found = _tiktok.find((item2) => {
+  //       return item2.url === item1.link;
+  //     });
+  //     return found ? false : true;
+  //   })
+  // );
   // const tiktokFilePath = "./output/_tiktok" + Date.now() + ".json";
   // const tiktokFileData = JSON.stringify(processedTiktokData);
   // await write(tiktokFilePath, tiktokFileData);
@@ -1117,10 +1095,26 @@ const init = async () => {
   // const twitterFileData = JSON.stringify(processedTwitterData);
   // await write(twitterFilePath, twitterFileData);
 
-  // const processedWhatsappData = await processWhatsappData(whatsappData);
-  // const whatsappFilePath = "./output/_whatsapp" + Date.now() + ".json";
-  // const whatsappFileData = JSON.stringify(processedWhatsappData);
-  // await write(whatsappFilePath, whatsappFileData);
+  const processedWhatsappData = await processWhatsappData([
+    {
+      link: "https://blog.whatsapp.com/end-to-end-encrypted-backups-on-whatsapp",
+      date: "TweetShare",
+      title: "End-to-End Encrypted Backups on WhatsApp",
+    },
+    {
+      link: "https://blog.whatsapp.com/end-to-end-encrypted-backups-on-whatsapp",
+      date: "TweetShare",
+      title: "End-to-End Encrypted Backups on WhatsApp",
+    },
+    {
+      link: "https://blog.whatsapp.com/end-to-end-encrypted-backups-on-whatsapp",
+      date: "TweetShare",
+      title: "End-to-End Encrypted Backups on WhatsApp",
+    },
+  ]);
+  const whatsappFilePath = "./output/_whatsapp" + Date.now() + ".json";
+  const whatsappFileData = JSON.stringify(processedWhatsappData);
+  await write(whatsappFilePath, whatsappFileData);
 
   // const processedYoutubeData = await processYoutubeData(youtubeData);
   // const youtubeFilePath = "./output/_youtube" + Date.now() + ".json";
