@@ -1,84 +1,191 @@
-import puppeteer from "../utilities/puppeteer.js";
+import puppeteer from "puppeteer";
+
+import monthToNumber from "../utilities/month-to-number.js";
 import wait from "../utilities/wait.js";
-import write from "../utilities/write.js";
 
-export default async () => {
-  const browser = await puppeteer(false);
-  console.log("1. Browser launched");
+import announcement from "../models/announcement.js";
 
+const getItems = async () => {
+  // Launch browser
+  const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
-  const url = "https://about.instagram.com/blog";
-  await page.goto(url);
-  console.log("2. Page opened");
+  console.log("Instagram: Browser launched");
 
-  const acceptCookieButton = await page.waitForSelector(
-    "button._42ft._4jy0._a6hb._a6ha._4jy3._4jy1.selected._51sy"
-  );
-  await acceptCookieButton.evaluate((el) => el.click());
-  console.log("3. Cookies accepted");
+  // Open newsroom
+  await page.goto("https://about.instagram.com/blog");
+  await wait(5000);
+  console.log("Instagram: Newsroom opened");
 
-  let loadMoreButton = await page.waitForSelector("button._afnw");
-  await loadMoreButton.evaluate((el) => el.click());
+  // Load entire item history
+  let loadMoreButton = await page.$("button._afnw");
   while (loadMoreButton) {
-    await wait(3000);
-    await page
-      .waitForSelector("button._afnw")
-      .then((res) => {
-        loadMoreButton = res || null;
-        return loadMoreButton.evaluate((el) => el.click());
-      })
-      .then(() => {
-        return true;
-      })
-      .catch(() => {
-        loadMoreButton = null;
-        return false;
-      });
+    await loadMoreButton.evaluate((el) => el.click());
+    await wait(5000);
+    loadMoreButton = await page
+      .$("button._afnw")
+      .then((res) => res || null)
+      .catch(() => null);
   }
-  const liElements = await page.$$("li._agif._ajte");
-  console.log("4. News elements loaded");
+  console.log("Instagram: Item history loaded");
 
-  const items = [];
-  for (const liElement of liElements) {
-    const hashtagElements = await liElement.$$("a._8hyj._9gii");
-    const hashtags = [];
-    for (const hashtagElement of hashtagElements) {
-      const hashtagText = await hashtagElement.evaluate((el) => {
-        return el.textContent;
-      });
-      const hashtag =
-        hashtagText && typeof hashtagText === "string"
-          ? hashtagText.toLowerCase().replace("#", "").trim()
-          : "";
-      if (hashtag) {
-        hashtags.push(hashtag);
+  // Extract data from items
+  const data = [];
+  const items = await page.$$("li._agif._ajte");
+  for (const item of items) {
+    const tagElements = await item.$$("a._8hyj._9gii");
+    const tags = [];
+    for (const tagElement of tagElements) {
+      const tag = tagElement
+        ? await tagElement
+            .evaluate((el) => el.textContent)
+            .then((res) => {
+              return res && typeof res === "string"
+                ? res.replace("#", "").trim()
+                : "";
+            })
+            .catch(() => {
+              console.log(error);
+              return "";
+            })
+        : "";
+      if (tag) {
+        tags.push(tag);
       }
     }
-    const titleElement = await liElement.$("div._agih a._9gii");
-    const titleText = await titleElement.evaluate((el) => {
-      return el.textContent;
-    });
-    const title =
-      titleText && typeof titleText === "string" ? titleText.trim() : "";
-    const linkText = await titleElement.evaluate((el) => {
-      return el.getAttribute("href");
-    });
-    const link =
-      linkText && typeof linkText === "string"
-        ? "https://about.instagram.com" + linkText
-        : "";
-    const item = { title, link, hashtags };
-    items.push(item);
+    const title = await item
+      .$("div._agih a._9gii")
+      .then((res) => {
+        return res ? res.evaluate((el) => el.textContent) : "";
+      })
+      .then((res) => {
+        return res && typeof res === "string" ? res.trim() : "";
+      })
+      .catch((error) => {
+        console.log(error);
+        return "";
+      });
+    const link = await item
+      .$("div._agih a._9gii")
+      .then((res) => {
+        return res ? res.evaluate((el) => el.getAttribute("href")) : "";
+      })
+      .then((res) => {
+        return res && typeof res === "string"
+          ? "https://about.instagram.com" + res.trim()
+          : "";
+      })
+      .catch((error) => {
+        console.log(error);
+        return "";
+      });
+    const dataItem = { tags, title, link };
+    data.push(dataItem);
   }
-  console.log("5. News elements parsed");
+  console.log("Instagram: Data extracted from items");
 
-  const fileName = "./output/instagram-" + Date.now() + ".json";
-  const fileData = JSON.stringify(items);
-  await write(fileName, fileData);
-  console.log("6. Scrape process completed");
-
+  // Close browser
   await browser.close();
-  console.log("7. Browser closed");
+  console.log("Instagram: Browser closed");
 
-  return;
+  // Return data
+  return data;
 };
+
+const getItemsData = async (items) => {
+  // Launch browser
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  console.log("Instagram: Browser launched");
+
+  // Extract item data
+  const n = items.length;
+  const data = [];
+  for (let i = 0; i < n; i++) {
+    try {
+      console.log(`Instagram: ${i + 1}/${n}`);
+      const item = items[i];
+      await page.goto(item.link);
+      await wait(10000);
+      const dateElements = await page.$$("div._8hlz p._a8td._abs4");
+      const dateElementsLength = dateElements.length;
+      let dateElementsCounter = 0;
+      let dateText = "";
+      while (dateElementsCounter < dateElementsLength && !dateText) {
+        const element = dateElements[dateElementsCounter];
+        const text = element
+          ? await element
+              .evaluate((el) => el.textContent)
+              .then((res) => {
+                return res && typeof res === "string"
+                  ? res.replace("Posted on", "").trim()
+                  : "";
+              })
+              .catch(() => "")
+          : "";
+        if (text) {
+          dateText = text;
+        }
+        dateElementsCounter++;
+      }
+      const year = dateText ? +dateText.split(" ")[2] : null;
+      const month = dateText ? monthToNumber(dateText.split(" ")[0]) : "";
+      const day = dateText ? +dateText.split(" ")[1].replace(",", "") : null;
+      const date = new Date(year, month, day);
+      const title = await page
+        .$("head title")
+        .then((res) => {
+          return res ? res.evaluate((el) => el.textContent) : "";
+        })
+        .then((res) => {
+          return res && typeof res === "string"
+            ? res.replace("| Instagram Blog", "").trim()
+            : "";
+        })
+        .catch((error) => {
+          console.log(error);
+          return "";
+        });
+      const description = await page
+        .$('head meta[name="description"]')
+        .then((res) => {
+          return res ? res.evaluate((el) => el.getAttribute("content")) : "";
+        })
+        .then((res) => {
+          return res && typeof res === "string" ? res.trim() : "";
+        })
+        .catch((error) => {
+          console.log(error);
+          return "";
+        });
+      const tags = item.tags;
+      const author = "";
+      const url = item.link;
+      const newAnnouncement = announcement(
+        "Instagram",
+        date,
+        title,
+        description,
+        tags,
+        author,
+        url
+      );
+      if (newAnnouncement) {
+        data.push(newAnnouncement);
+      } else {
+        throw new Error("Instagram: Invalid data");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  console.log("Instagram: Item data extracted");
+
+  // Close browser
+  await browser.close();
+  console.log("Instagram: Browser closed");
+
+  // Return data
+  return data;
+};
+
+export default { getItems, getItemsData };
