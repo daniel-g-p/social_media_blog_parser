@@ -3,6 +3,7 @@ import instagram from "./modules/instagram.js";
 import linkedin from "./modules/linkedin.js";
 import pinterest from "./modules/pinterest.js";
 import reddit from "./modules/reddit.js";
+import snapchat from "./modules/snapchat.js";
 
 import write from "./utilities/write.js";
 
@@ -36,6 +37,12 @@ const init = async () => {
   //   const redditFileName = "./output/reddit-" + Date.now() + ".json";
   //   const redditFileData = JSON.stringify(redditItemsData);
   //   await write(redditFileName, redditFileData);
+
+  const snapchatItems = await snapchat.getItems();
+  const snapchatItemsData = await snapchat.getItemsData(snapchatItems);
+  const snapchatFileName = "./output/snapchat-" + Date.now() + ".json";
+  const snapchatFileData = JSON.stringify(snapchatItemsData);
+  await write(snapchatFileName, snapchatFileData);
 
   process.exit();
 };

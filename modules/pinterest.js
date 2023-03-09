@@ -141,7 +141,6 @@ const getItemsData = async (items) => {
           tags.push(tag);
         }
       }
-
       const author = "";
       const url = item.link;
       const newAnnouncement = announcement(
