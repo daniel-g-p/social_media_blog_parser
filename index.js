@@ -1077,39 +1077,39 @@ const init = async () => {
   //   .then((res) => res.toString())
   //   .then((res) => JSON.parse(res));
 
-  const _data = await read("./output/_data.json")
-    .then((res) => res.toString())
-    .then((res) => JSON.parse(res))
-    .then((res) => {
-      return res
-        .map((item) => {
-          return [
-            item.platform,
-            item.date,
-            item.title,
-            item.description,
-            item.tags.join(","),
-            item.author,
-            item.url,
-          ];
-        })
-        .sort((a, b) => {
-          return a.date - b.date;
-        });
-    });
-  _data.splice(0, 0, [
-    "Platform",
-    "Date",
-    "Title",
-    "Description",
-    "Tags",
-    "Author",
-    "URL",
-  ]);
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.aoa_to_sheet(_data);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-  XLSX.writeFile(workbook, "./output/_data" + 1 + ".xlsx");
+  // const _data = await read("./output/_data.json")
+  //   .then((res) => res.toString())
+  //   .then((res) => JSON.parse(res))
+  //   .then((res) => {
+  //     return res
+  //       .map((item) => {
+  //         return [
+  //           item.platform,
+  //           item.date,
+  //           item.title,
+  //           item.description,
+  //           item.tags.join(","),
+  //           item.author,
+  //           item.url,
+  //         ];
+  //       })
+  //       .sort((a, b) => {
+  //         return a.date - b.date;
+  //       });
+  //   });
+  // _data.splice(0, 0, [
+  //   "Platform",
+  //   "Date",
+  //   "Title",
+  //   "Description",
+  //   "Tags",
+  //   "Author",
+  //   "URL",
+  // ]);
+  // const workbook = XLSX.utils.book_new();
+  // const worksheet = XLSX.utils.aoa_to_sheet(_data);
+  // XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
+  // XLSX.writeFile(workbook, "./output/_data" + 1 + ".xlsx");
 
   // const _youtube = await read("./output/_youtube.json")
   //   .then((res) => res.toString())
