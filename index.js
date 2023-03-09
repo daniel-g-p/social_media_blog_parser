@@ -115,7 +115,7 @@ const processInstagramData = async (items) => {
       console.log(`Instagram (${i + 1}/${n})`);
       const item = items[i];
       await page.goto(item.link);
-      await wait(5000);
+      await wait(10000);
       const dateElements = await page.$$("div._8hlz p._a8td._abs4");
       let dateText = "";
       let dateElementsCounter = 0;
@@ -1081,17 +1081,21 @@ const init = async () => {
     .then((res) => res.toString())
     .then((res) => JSON.parse(res))
     .then((res) => {
-      return res.map((item) => {
-        return [
-          item.platform,
-          item.date,
-          item.title,
-          item.description,
-          item.tags.join(","),
-          item.author,
-          item.url,
-        ];
-      });
+      return res
+        .map((item) => {
+          return [
+            item.platform,
+            item.date,
+            item.title,
+            item.description,
+            item.tags.join(","),
+            item.author,
+            item.url,
+          ];
+        })
+        .sort((a, b) => {
+          return a.date - b.date;
+        });
     });
   _data.splice(0, 0, [
     "Platform",
@@ -1105,7 +1109,7 @@ const init = async () => {
   const workbook = XLSX.utils.book_new();
   const worksheet = XLSX.utils.aoa_to_sheet(_data);
   XLSX.utils.book_append_sheet(workbook, worksheet, "Data");
-  XLSX.writeFile(workbook, "./output/_data.xlsx");
+  XLSX.writeFile(workbook, "./output/_data" + 1 + ".xlsx");
 
   // const _youtube = await read("./output/_youtube.json")
   //   .then((res) => res.toString())
@@ -1128,9 +1132,7 @@ const init = async () => {
   // const facebookFileData = JSON.stringify(processedFacebookData);
   // await write(facebookFilePath, facebookFileData);
 
-  // const processedInstagramData = await processInstagramData(
-  //   instagramData.slice(0, 50)
-  // );
+  // const processedInstagramData = await processInstagramData(instagramData);
   // const instagramFilePath = "./output/_instagram-" + Date.now() + ".json";
   // const instagramFileData = JSON.stringify(processedInstagramData);
   // await write(instagramFilePath, instagramFileData);
