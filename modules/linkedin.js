@@ -16,7 +16,7 @@ const getItems = async () => {
   await wait(5000);
   console.log("LinkedIn: Newsroom opened");
 
-  // Dafine function to extract data from items
+  // Define function to extract data from items
   const data = [];
   const extractData = async () => {
     const items = await page.$$("ul.post-list li.post-list-item");
