@@ -93,7 +93,7 @@ const init = async () => {
   const youtubeFileData = JSON.stringify(youtubeItemsData);
   await write(youtubeFileName, youtubeFileData);
 
-  // All
+  // JSON Export
   const allItemsData = [
     ...facebookItemsData,
     ...instagramItemsData,
@@ -110,6 +110,31 @@ const init = async () => {
   const allFileData = JSON.stringify(allItemsData);
   await write(allFileName, allFileData);
 
+  // XLSX Export
+  const xlsxData = allItemsData.map((item) => {
+    return [
+      item.platform,
+      new Date(item.date).toISOString().slice(0, 10),
+      item.title,
+      item.description,
+      item.tags.join(", "),
+      item.author,
+      item.url,
+    ];
+  });
+  xlsxData.splice(0, 0, [
+    "Platform",
+    "Date",
+    "Title",
+    "Description",
+    "Tags",
+    "Author",
+    "URL",
+  ]);
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet(xlsxData);
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+  XLSX.writeFile(workbook, "./output/_data-" + Date.now() + ".xlsx");
   process.exit();
 };
 
