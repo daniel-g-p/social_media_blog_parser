@@ -82,7 +82,7 @@ const getItems = async () => {
 
   // Close browser
   await browser.close();
-  console.log("LinkedIn: Browser closed");
+  console.log("Pinterest: Browser closed");
 
   // Return data
   return data;

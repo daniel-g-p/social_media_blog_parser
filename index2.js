@@ -4,6 +4,7 @@ import linkedin from "./modules/linkedin.js";
 import pinterest from "./modules/pinterest.js";
 import reddit from "./modules/reddit.js";
 import snapchat from "./modules/snapchat.js";
+import stackoverflow from "./modules/stackoverflow.js";
 
 import write from "./utilities/write.js";
 
@@ -38,11 +39,29 @@ const init = async () => {
   //   const redditFileData = JSON.stringify(redditItemsData);
   //   await write(redditFileName, redditFileData);
 
-  const snapchatItems = await snapchat.getItems();
-  const snapchatItemsData = await snapchat.getItemsData(snapchatItems);
-  const snapchatFileName = "./output/snapchat-" + Date.now() + ".json";
-  const snapchatFileData = JSON.stringify(snapchatItemsData);
-  await write(snapchatFileName, snapchatFileData);
+  // const snapchatItems = await snapchat.getItems();
+  // const snapchatItemsData = await snapchat.getItemsData(snapchatItems);
+  // const snapchatFileName = "./output/snapchat-" + Date.now() + ".json";
+  // const snapchatFileData = JSON.stringify(snapchatItemsData);
+  // await write(snapchatFileName, snapchatFileData);
+
+  // const stackoverflowItems = await stackoverflow.getItems();
+  // const stackoverflowItemsData = await stackoverflow.getItemsData(
+  //   stackoverflowItems.slice(6, 8)
+  // );
+  // const stackoverflowFileName =
+  //   "./output/stackoverflow-" + Date.now() + ".json";
+  // const stackoverflowFileData = JSON.stringify(stackoverflowItemsData);
+  // await write(stackoverflowFileName, stackoverflowFileData);
+
+  const stackoverflowItems = await stackoverflow.getItems();
+  const stackoverflowItemsData = await stackoverflow.getItemsData(
+    stackoverflowItems.slice(6, 8)
+  );
+  const stackoverflowFileName =
+    "./output/stackoverflow-" + Date.now() + ".json";
+  const stackoverflowFileData = JSON.stringify(stackoverflowItemsData);
+  await write(stackoverflowFileName, stackoverflowFileData);
 
   process.exit();
 };
