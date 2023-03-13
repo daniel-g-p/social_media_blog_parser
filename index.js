@@ -10,132 +10,191 @@ import twitter from "./modules/twitter.js";
 import whatsapp from "./modules/whatsapp.js";
 import youtube from "./modules/youtube.js";
 
+import read from "./utilities/read.js";
 import write from "./utilities/write.js";
 
-const init = async () => {
-  // Facebook
-  const facebookItems = await facebook.getItems();
-  const facebookItemsData = await facebook.getItemsData(facebookItems);
-  const facebookFileName = "./output/facebook-" + Date.now() + ".json";
-  const facebookFileData = JSON.stringify(facebookItemsData);
-  await write(facebookFileName, facebookFileData);
+const gatherPosts = async () => {
+  // // Facebook
+  // const facebookItems = await facebook.getItems();
+  // const facebookItemsData = await facebook.getItemsData(facebookItems);
+  // const facebookFileName = "./output/facebook-" + Date.now() + ".json";
+  // const facebookFileData = JSON.stringify(facebookItemsData);
+  // await write(facebookFileName, facebookFileData);
 
-  // Instagram
-  const instagramItems = await instagram.getItems();
-  const instagramItemsData = await instagram.getItemsData(instagramItems);
-  const instagramFileName = "./output/instagram-" + Date.now() + ".json";
-  const instagramFileData = JSON.stringify(instagramItemsData);
-  await write(instagramFileName, instagramFileData);
+  // // Instagram
+  // const instagramItems = await instagram.getItems();
+  // const instagramItemsData = await instagram.getItemsData(instagramItems);
+  // const instagramFileName = "./output/instagram-" + Date.now() + ".json";
+  // const instagramFileData = JSON.stringify(instagramItemsData);
+  // await write(instagramFileName, instagramFileData);
 
-  // LinkedIn
-  const linkedinItems = await linkedin.getItems();
-  const linkedinItemsData = await linkedin.getItemsData(linkedinItems);
-  const linkedinFileName = "./output/linkedin-" + Date.now() + ".json";
-  const linkedinFileData = JSON.stringify(linkedinItemsData);
-  await write(linkedinFileName, linkedinFileData);
+  // // LinkedIn
+  // const linkedinItems = await linkedin.getItems();
+  // const linkedinItemsData = await linkedin.getItemsData(linkedinItems);
+  // const linkedinFileName = "./output/linkedin-" + Date.now() + ".json";
+  // const linkedinFileData = JSON.stringify(linkedinItemsData);
+  // await write(linkedinFileName, linkedinFileData);
 
-  // Pinterest
-  const pinterestItems = await pinterest.getItems();
-  const pinterestItemsData = await pinterest.getItemsData(pinterestItems);
-  const pinterestFileName = "./output/pinterest-" + Date.now() + ".json";
-  const pinterestFileData = JSON.stringify(pinterestItemsData);
-  await write(pinterestFileName, pinterestFileData);
+  // // Pinterest
+  // const pinterestItems = await pinterest.getItems();
+  // const pinterestItemsData = await pinterest.getItemsData(pinterestItems);
+  // const pinterestFileName = "./output/pinterest-" + Date.now() + ".json";
+  // const pinterestFileData = JSON.stringify(pinterestItemsData);
+  // await write(pinterestFileName, pinterestFileData);
 
-  // Reddit
-  const redditItems = await reddit.getItems();
-  const redditItemsData = await reddit.getItemsData(redditItems);
-  const redditFileName = "./output/reddit-" + Date.now() + ".json";
-  const redditFileData = JSON.stringify(redditItemsData);
-  await write(redditFileName, redditFileData);
+  // // Reddit
+  // const redditItems = await reddit.getItems();
+  // const redditItemsData = await reddit.getItemsData(redditItems);
+  // const redditFileName = "./output/reddit-" + Date.now() + ".json";
+  // const redditFileData = JSON.stringify(redditItemsData);
+  // await write(redditFileName, redditFileData);
 
-  // Snapchat
-  const snapchatItems = await snapchat.getItems();
-  const snapchatItemsData = await snapchat.getItemsData(snapchatItems);
-  const snapchatFileName = "./output/snapchat-" + Date.now() + ".json";
-  const snapchatFileData = JSON.stringify(snapchatItemsData);
-  await write(snapchatFileName, snapchatFileData);
+  // // Snapchat
+  // const snapchatItems = await snapchat.getItems();
+  // const snapchatItemsData = await snapchat.getItemsData(snapchatItems);
+  // const snapchatFileName = "./output/snapchat-" + Date.now() + ".json";
+  // const snapchatFileData = JSON.stringify(snapchatItemsData);
+  // await write(snapchatFileName, snapchatFileData);
 
-  // Stack Overflow
-  const stackoverflowItems = await stackoverflow.getItems();
-  const stackoverflowItemsData = await stackoverflow.getItemsData(
-    stackoverflowItems
-  );
-  const stackoverflowFileName =
-    "./output/stackoverflow-" + Date.now() + ".json";
-  const stackoverflowFileData = JSON.stringify(stackoverflowItemsData);
-  await write(stackoverflowFileName, stackoverflowFileData);
+  // // Stack Overflow
+  // const stackoverflowItems = await stackoverflow.getItems();
+  // const stackoverflowItemsData = await stackoverflow.getItemsData(
+  //   stackoverflowItems
+  // );
+  // const stackoverflowFileName =
+  //   "./output/stackoverflow-" + Date.now() + ".json";
+  // const stackoverflowFileData = JSON.stringify(stackoverflowItemsData);
+  // await write(stackoverflowFileName, stackoverflowFileData);
 
-  // TikTok
-  const tiktokItems = await tiktok.getItems();
-  const tiktokItemsData = await tiktok.getItemsData(tiktokItems);
-  const tiktokFileName = "./output/tiktok-" + Date.now() + ".json";
-  const tiktokFileData = JSON.stringify(tiktokItemsData);
-  await write(tiktokFileName, tiktokFileData);
+  // // TikTok
+  // const tiktokItems = await tiktok.getItems();
+  // const tiktokItemsData = await tiktok.getItemsData(tiktokItems);
+  // const tiktokFileName = "./output/tiktok-" + Date.now() + ".json";
+  // const tiktokFileData = JSON.stringify(tiktokItemsData);
+  // await write(tiktokFileName, tiktokFileData);
 
-  // Twitter
-  const twitterItems = await twitter.getItems();
-  const twitterItemsData = await twitter.getItemsData(twitterItems);
-  const twitterFileName = "./output/twitter-" + Date.now() + ".json";
-  const twitterFileData = JSON.stringify(twitterItemsData);
-  await write(twitterFileName, twitterFileData);
+  // // Twitter
+  // const twitterItems = await twitter.getItems();
+  // const twitterItemsData = await twitter.getItemsData(twitterItems);
+  // const twitterFileName = "./output/twitter-" + Date.now() + ".json";
+  // const twitterFileData = JSON.stringify(twitterItemsData);
+  // await write(twitterFileName, twitterFileData);
 
-  // whatsApp
-  const whatsappItems = await whatsapp.getItems();
-  const whatsappItemsData = await whatsapp.getItemsData(whatsappItems);
-  const whatsappFileName = "./output/whatsapp-" + Date.now() + ".json";
-  const whatsappFileData = JSON.stringify(whatsappItemsData);
-  await write(whatsappFileName, whatsappFileData);
+  // // whatsApp
+  // const whatsappItems = await whatsapp.getItems();
+  // const whatsappItemsData = await whatsapp.getItemsData(whatsappItems);
+  // const whatsappFileName = "./output/whatsapp-" + Date.now() + ".json";
+  // const whatsappFileData = JSON.stringify(whatsappItemsData);
+  // await write(whatsappFileName, whatsappFileData);
 
-  // YouTube
-  const youtubeItems = await youtube.getItems();
-  const youtubeItemsData = await youtube.getItemsData(youtubeItems);
-  const youtubeFileName = "./output/youtube-" + Date.now() + ".json";
-  const youtubeFileData = JSON.stringify(youtubeItemsData);
-  await write(youtubeFileName, youtubeFileData);
+  // // YouTube
+  // const youtubeItems = await youtube.getItems();
+  // const youtubeItemsData = await youtube.getItemsData(youtubeItems);
+  // const youtubeFileName = "./output/youtube-" + Date.now() + ".json";
+  // const youtubeFileData = JSON.stringify(youtubeItemsData);
+  // await write(youtubeFileName, youtubeFileData);
 
-  // JSON Export
-  const allItemsData = [
-    ...facebookItemsData,
-    ...instagramItemsData,
-    ...pinterestItemsData,
-    ...redditItemsData,
-    ...snapchatItemsData,
-    ...stackoverflowItemsData,
-    ...tiktokItemsData,
-    ...twitterItemsData,
-    ...whatsappItemsData,
-    ...youtubeItemsData,
-  ].sort((a, b) => b.date - a.date);
-  const allFileName = "./output/_data-" + Date.now() + ".json";
-  const allFileData = JSON.stringify(allItemsData);
-  await write(allFileName, allFileData);
+  // // JSON Export
+  // const allItemsData = [
+  //   ...facebookItemsData,
+  //   ...instagramItemsData,
+  //   ...pinterestItemsData,
+  //   ...redditItemsData,
+  //   ...snapchatItemsData,
+  //   ...stackoverflowItemsData,
+  //   ...tiktokItemsData,
+  //   ...twitterItemsData,
+  //   ...whatsappItemsData,
+  //   ...youtubeItemsData,
+  // ].sort((a, b) => b.date - a.date);
+  // const allFileName = "./output/_data-" + Date.now() + ".json";
+  // const allFileData = JSON.stringify(allItemsData);
+  // await write(allFileName, allFileData);
 
-  // XLSX Export
-  const xlsxData = allItemsData.map((item) => {
-    return [
-      item.platform,
-      new Date(item.date).toISOString().slice(0, 10),
-      item.title,
-      item.description,
-      item.tags.join(", "),
-      item.author,
-      item.url,
-    ];
-  });
-  xlsxData.splice(0, 0, [
-    "Platform",
-    "Date",
-    "Title",
-    "Description",
-    "Tags",
-    "Author",
-    "URL",
-  ]);
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.aoa_to_sheet(xlsxData);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-  XLSX.writeFile(workbook, "./output/_data-" + Date.now() + ".xlsx");
+  // // XLSX Export
+  // const xlsxData = allItemsData.map((item) => {
+  //   return [
+  //     item.platform,
+  //     new Date(item.date).toISOString().slice(0, 10),
+  //     item.title,
+  //     item.description,
+  //     item.tags.join(", "),
+  //     item.author,
+  //     item.url,
+  //   ];
+  // });
+  // xlsxData.splice(0, 0, [
+  //   "Platform",
+  //   "Date",
+  //   "Title",
+  //   "Description",
+  //   "Tags",
+  //   "Author",
+  //   "URL",
+  // ]);
+  // const workbook = XLSX.utils.book_new();
+  // const worksheet = XLSX.utils.aoa_to_sheet(xlsxData);
+  // XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+  // XLSX.writeFile(workbook, "./output/_data-" + Date.now() + ".xlsx");
+
   process.exit();
 };
 
-init();
+const getPostsText = async () => {
+  const all = await read("./output/_data.json")
+    .then((res) => JSON.parse(res))
+    .catch(() => []);
+
+  // Facebook
+  const facebookInput = all.filter((item) => item.platform === "Facebook");
+  const facebookOutput = await facebook.getItemsText(
+    facebookInput.slice(50, 55)
+  );
+  const facebookFileName = "./output/facebook_text-" + Date.now() + ".json";
+  const facebookFileData = JSON.stringify(facebookOutput);
+  await write(facebookFileName, facebookFileData);
+
+  // // Instagram
+  // const instagramInput = all.filter((item) => item.platform === "Instagram");
+  // const instagramOutput = await instagram.getItemsText(instagramInput);
+
+  // // LinkedIn
+  // const linkedinInput = all.filter((item) => item.platform === "LinkedIn");
+  // const linkedinOutput = await linkedin.getItemsText(linkedinInput);
+
+  // // Pinterest
+  // const pinterestInput = all.filter((item) => item.platform === "Pinterest");
+  // const pinterestOutput = await pinterest.getItemsText(pinterestInput);
+
+  // // Reddit
+  // const redditInput = all.filter((item) => item.platform === "Reddit");
+  // const redditOutput = await reddit.getItemsText(redditInput);
+
+  // // Snapchat
+  // const snapchatInput = all.filter((item) => item.platform === "Snapchat");
+  // const snapchatOutput = await snapchat.getItemsText(snapchatInput);
+
+  // // Stack Overflow
+  // const stackInput = all.filter((item) => item.platform === "Stack Overflow");
+  // const stackOutput = await stackoverflow.getItemsText(stackInput);
+
+  // // TikTok
+  // const tiktokInput = all.filter((item) => item.platform === "TikTok");
+  // const tiktokOutput = await tiktok.getItemsText(tiktokInput);
+
+  // // Twitter
+  // const twitterInput = all.filter((item) => item.platform === "Twitter");
+  // const twitterOutput = await twitter.getItemsText(twitterInput);
+
+  // // WhatsApp
+  // const whatsappInput = all.filter((item) => item.platform === "WhatsApp");
+  // const whatsappOutput = await whatsapp.getItemsText(whatsappInput);
+
+  // // YouTube
+  // const youtubeInput = all.filter((item) => item.platform === "YouTube");
+  // const youtubeOutput = await youtube.getItemsText(youtubeInput);
+
+  process.exit();
+};
+
+getPostsText();

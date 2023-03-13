@@ -187,4 +187,72 @@ const getItemsData = async (items) => {
   return data;
 };
 
-export default { getItems, getItemsData };
+const getItemsText = async (items) => {
+  // Launch browser
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  console.log("Twitter: Browser launched");
+
+  // Extract item data
+  const n = items.length;
+  const data = [];
+  for (let i = 0; i < n; i++) {
+    try {
+      const item = items[i];
+      await page.goto(item.url);
+      wait(5000);
+      console.log("Twitter: " + (i + 1) + "/" + n);
+      const text = await page
+        .$$("div.column.column-6 p, div.column.column-6 li")
+        .then(async (res) => {
+          const strings = [];
+          if (res && Array.isArray(res)) {
+            for (const element of res) {
+              const elementText = await element.evaluate((el) => {
+                return el.textContent;
+              });
+              if (elementText && typeof elementText === "string") {
+                strings.push(elementText);
+              }
+            }
+          }
+          return strings
+            .map((string) => string.trim())
+            .filter((string) => string)
+            .join(" ");
+        })
+        .then((res) => {
+          return res && typeof res === "string"
+            ? res
+                .split("\n")
+                .map((substring) => substring.trim())
+                .filter((substring) => substring)
+                .join(" ")
+                .split(" ")
+                .map((substring) => substring.trim())
+                .filter((substring) => substring)
+                .join(" ")
+            : "";
+        })
+        .catch((error) => {
+          console.log(error);
+          return "";
+        });
+      const dataItem = {
+        platform: item.platform,
+        url: item.url,
+        date: new Date(item.date),
+        tags: item.tags,
+        title: item.title,
+        text,
+      };
+      data.push(dataItem);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return data;
+};
+
+export default { getItems, getItemsData, getItemsText };
