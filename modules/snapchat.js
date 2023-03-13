@@ -96,7 +96,7 @@ const getItemsData = async (items) => {
       console.log(`Snapchat: ${i + 1}/${n}`);
       const item = items[i];
       await page.goto(item.link);
-      await wait(2500);
+      await wait(5000);
       const dateText = await page
         .$("h1")
         .then((res) => {
@@ -150,7 +150,7 @@ const getItemsData = async (items) => {
 
   // Close browser
   await browser.close();
-  console.log("Pinterest: Browser closed");
+  console.log("Snapchat: Browser closed");
 
   // Return data
   return data;

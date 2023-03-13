@@ -5,6 +5,10 @@ import pinterest from "./modules/pinterest.js";
 import reddit from "./modules/reddit.js";
 import snapchat from "./modules/snapchat.js";
 import stackoverflow from "./modules/stackoverflow.js";
+import tiktok from "./modules/tiktok.js";
+import twitter from "./modules/twitter.js";
+import whatsapp from "./modules/whatsapp.js";
+import youtube from "./modules/youtube.js";
 
 import write from "./utilities/write.js";
 
@@ -54,14 +58,31 @@ const init = async () => {
   // const stackoverflowFileData = JSON.stringify(stackoverflowItemsData);
   // await write(stackoverflowFileName, stackoverflowFileData);
 
-  const stackoverflowItems = await stackoverflow.getItems();
-  const stackoverflowItemsData = await stackoverflow.getItemsData(
-    stackoverflowItems.slice(6, 8)
-  );
-  const stackoverflowFileName =
-    "./output/stackoverflow-" + Date.now() + ".json";
-  const stackoverflowFileData = JSON.stringify(stackoverflowItemsData);
-  await write(stackoverflowFileName, stackoverflowFileData);
+  // const tiktokItems = await tiktok.getItems();
+  // const tiktokItemsData = await tiktok.getItemsData(tiktokItems);
+  // const tiktokFileName = "./output/tiktok-" + Date.now() + ".json";
+  // const tiktokFileData = JSON.stringify(tiktokItemsData);
+  // await write(tiktokFileName, tiktokFileData);
+
+  // const twitterItems = await twitter.getItems();
+  // const twitterItemsData = await twitter.getItemsData(twitterItems);
+  // const twitterFileName = "./output/twitter-" + Date.now() + ".json";
+  // const twitterFileData = JSON.stringify(twitterItemsData);
+  // await write(twitterFileName, twitterFileData);
+
+  // const whatsappItems = await whatsapp.getItems();
+  // const whatsappItemsData = await whatsapp.getItemsData(whatsappItems);
+  // console.log(whatsappItemsData);
+  // const whatsappFileName = "./output/whatsapp-" + Date.now() + ".json";
+  // const whatsappFileData = JSON.stringify(whatsappItemsData);
+  // await write(whatsappFileName, whatsappFileData);
+
+  // const youtubeItems = await youtube.getItems();
+  // const youtubeItemsData = await youtube.getItemsData(youtubeItems.slice(6, 8));
+  // console.log(youtubeItemsData);
+  // const youtubeFileName = "./output/youtube-" + Date.now() + ".json";
+  // const youtubeFileData = JSON.stringify(youtubeItemsData);
+  // await write(youtubeFileName, youtubeFileData);
 
   process.exit();
 };
