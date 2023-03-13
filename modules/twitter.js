@@ -200,7 +200,7 @@ const getItemsText = async (items) => {
     try {
       const item = items[i];
       await page.goto(item.url);
-      wait(5000);
+      await wait(2500);
       console.log("Twitter: " + (i + 1) + "/" + n);
       const text = await page
         .$$("div.column.column-6 p, div.column.column-6 li")

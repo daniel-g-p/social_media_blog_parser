@@ -199,7 +199,7 @@ const getItemsText = async (items) => {
     try {
       const item = items[i];
       await page.goto(item.url);
-      wait(5000);
+      await wait(2500);
       console.log("Reddit: " + (i + 1) + "/" + n);
       const text = await page
         .$("div.entry-content")

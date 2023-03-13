@@ -201,7 +201,7 @@ const getItemsText = async (items) => {
     try {
       const item = items[i];
       await page.goto(item.url);
-      wait(10000);
+      await wait(7500);
       console.log("Instagram: " + (i + 1) + "/" + n);
       const text = await page
         .$("div._8ig0._8g86")
