@@ -231,23 +231,9 @@ const getItemsText = async (items) => {
       await wait(2500);
       console.log("YouTube: " + (i + 1) + "/" + n);
       const text = await page
-        .$$("div.yt-article-main-content section.js-yt-gtm-media-paragraph")
-        .then(async (res) => {
-          const strings = [];
-          if (res && Array.isArray(res)) {
-            for (const element of res) {
-              const elementText = await element.evaluate((el) => {
-                return el.textContent;
-              });
-              if (elementText && typeof elementText === "string") {
-                strings.push(elementText);
-              }
-            }
-          }
-          return strings
-            .map((string) => string.trim())
-            .filter((string) => string)
-            .join(" ");
+        .$(".yt-article-main-content")
+        .then((res) => {
+          return res ? res.evaluate((el) => el.textContent) : null;
         })
         .then((res) => {
           return res && typeof res === "string"
