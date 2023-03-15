@@ -14,7 +14,7 @@ import read from "./utilities/read.js";
 import write from "./utilities/write.js";
 
 const gatherPosts = async () => {
-  // // Facebook
+  // Facebook
   // const facebookItems = await facebook.getItems();
   // const facebookItemsData = await facebook.getItemsData(facebookItems);
   // const facebookFileName = "./output/facebook-" + Date.now() + ".json";
@@ -155,9 +155,7 @@ const getPostsText = async () => {
     });
   const facebookFileName = "./output/facebook_text-" + Date.now() + ".json";
   const facebookFileData = JSON.stringify(facebookOutput);
-  await write(facebookFileName, facebookFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(facebookFileName, facebookFileData);
 
   // Instagram
   const instagramInput = all.filter((item) => item.platform === "Instagram");
@@ -169,9 +167,7 @@ const getPostsText = async () => {
     });
   const instagramFileName = "./output/instagram_text-" + Date.now() + ".json";
   const instagramFileData = JSON.stringify(instagramOutput);
-  await write(instagramFileName, instagramFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(instagramFileName, instagramFileData);
 
   // // LinkedIn
   const linkedinInput = all.filter((item) => item.platform === "LinkedIn");
@@ -183,9 +179,7 @@ const getPostsText = async () => {
     });
   const linkedinFileName = "./output/linkedin_text-" + Date.now() + ".json";
   const linkedinFileData = JSON.stringify(linkedinOutput);
-  await write(linkedinFileName, linkedinFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(linkedinFileName, linkedinFileData);
 
   // // Pinterest
   const pinterestInput = all.filter((item) => item.platform === "Pinterest");
@@ -197,9 +191,7 @@ const getPostsText = async () => {
     });
   const pinterestFileName = "./output/pinterest_text-" + Date.now() + ".json";
   const pinterestFileData = JSON.stringify(pinterestOutput);
-  await write(pinterestFileName, pinterestFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(pinterestFileName, pinterestFileData);
 
   // // Reddit
   const redditInput = all.filter((item) => item.platform === "Reddit");
@@ -209,9 +201,7 @@ const getPostsText = async () => {
   });
   const redditFileName = "./output/reddit_text-" + Date.now() + ".json";
   const redditFileData = JSON.stringify(redditOutput);
-  await write(redditFileName, redditFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(redditFileName, redditFileData);
 
   // // Snapchat
   const snapchatInput = all.filter((item) => item.platform === "Snapchat");
@@ -223,9 +213,7 @@ const getPostsText = async () => {
     });
   const snapchatFileName = "./output/snapchat_text-" + Date.now() + ".json";
   const snapchatFileData = JSON.stringify(snapchatOutput);
-  await write(snapchatFileName, snapchatFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(snapchatFileName, snapchatFileData);
 
   // // Stack Overflow
   const stackInput = all.filter((item) => item.platform === "Stack Overflow");
@@ -237,9 +225,7 @@ const getPostsText = async () => {
     });
   const stackFileName = "./output/stackoverflow_text-" + Date.now() + ".json";
   const stackFileData = JSON.stringify(stackOutput);
-  await write(stackFileName, stackFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(stackFileName, stackFileData);
 
   // // TikTok
   const tiktokInput = all.filter((item) => item.platform === "TikTok");
@@ -249,9 +235,7 @@ const getPostsText = async () => {
   });
   const tiktokFileName = "./output/tiktok_text-" + Date.now() + ".json";
   const tiktokFileData = JSON.stringify(tiktokOutput);
-  await write(tiktokFileName, tiktokFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(tiktokFileName, tiktokFileData);
 
   // // Twitter
   const twitterInput = all.filter((item) => item.platform === "Twitter");
@@ -263,9 +247,7 @@ const getPostsText = async () => {
     });
   const twitterFileName = "./output/twitter_text-" + Date.now() + ".json";
   const twitterFileData = JSON.stringify(twitterOutput);
-  await write(twitterFileName, twitterFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(twitterFileName, twitterFileData);
 
   // // WhatsApp
   const whatsappInput = all.filter((item) => item.platform === "WhatsApp");
@@ -277,9 +259,7 @@ const getPostsText = async () => {
     });
   const whatsappFileName = "./output/whatsapp_text-" + Date.now() + ".json";
   const whatsappFileData = JSON.stringify(whatsappOutput);
-  await write(whatsappFileName, whatsappFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(whatsappFileName, whatsappFileData);
 
   // // YouTube
   const youtubeInput = all.filter((item) => item.platform === "YouTube");
@@ -291,11 +271,10 @@ const getPostsText = async () => {
     });
   const youtubeFileName = "./output/youtube_text-" + Date.now() + ".json";
   const youtubeFileData = JSON.stringify(youtubeOutput);
-  await write(youtubeFileName, youtubeFileData).catch((error) => {
-    console.log(error);
-  });
+  await write(youtubeFileName, youtubeFileData);
 
   process.exit();
 };
 
-getPostsText();
+// gatherPosts();
+// getPostsText();

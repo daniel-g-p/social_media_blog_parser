@@ -4,42 +4,28 @@ import write from "./utilities/write.js";
 import youtube from "./modules/youtube.js";
 
 const init = async () => {
-  const youtubeInput = await read("./output/youtube_text.json")
-    .then((res) => JSON.parse(res))
-    .catch((error) => {
-      console.log(error);
-      return [];
-    });
+  const data = await read("./output/03-data-formatted.json").then((res) => {
+    return JSON.parse(res);
+  });
 
-  // const data2 = await read("./output/_data2.json").then((res) => {
-  //   return JSON.parse(res);
-  // });
+  const characters = data
+    .reduce((characters, item) => {
+      const itemCharacters = item.text.split("");
+      for (const itemCharacter of itemCharacters) {
+        if (!characters.includes(itemCharacter)) {
+          characters.push(itemCharacter);
+        }
+      }
+      return characters;
+    }, [])
+    .sort();
 
-  // const characters = data2
-  //   .reduce((characters, item) => {
-  //     const itemCharacters = item.text
-  //       .normalize("NFD")
-  //       .replace(/[\u0300-\u036f]/g, "")
-  //       .split("");
-  //     for (const itemCharacter of itemCharacters) {
-  //       if (!characters.includes(itemCharacter)) {
-  //         characters.push(itemCharacter);
-  //       }
-  //     }
-  //     return characters;
-  //   }, [])
-  //   .sort();
-
-  // console.dir(characters, { maxArrayLength: null });
-
-  const youtubeOutput = await youtube.getItemsText(youtubeInput);
-  await write(
-    "./output/youtube_text-" + Date.now() + ".json",
-    JSON.stringify(youtubeOutput)
-  );
+  console.log(characters);
 };
 
 init();
+
+// original, ascii
 
 // const validCharacters = [
 //   " ",
