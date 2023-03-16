@@ -2,124 +2,61 @@ import read from "./utilities/read.js";
 import write from "./utilities/write.js";
 
 import youtube from "./modules/youtube.js";
+import uniqueId from "./utilities/id.js";
 
 const init = async () => {
-  const data = await read("./output/03-data-formatted.json").then((res) => {
-    return JSON.parse(res);
-  });
+  const input = await read("./output/05-data-alphanumeric.json")
+    .then((res) => {
+      return JSON.parse(res);
+    })
+    .catch((error) => {
+      console.log(error);
+      return [];
+    });
 
-  const characters = data
-    .reduce((characters, item) => {
+  const output = input
+    .map((item) => {
       const itemCharacters = item.text.split("");
-      for (const itemCharacter of itemCharacters) {
-        if (!characters.includes(itemCharacter)) {
-          characters.push(itemCharacter);
-        }
-      }
-      return characters;
-    }, [])
-    .sort();
+      const alphanumeric = itemCharacters.reduce((text, character) => {
+        const asciiCode = character.charCodeAt(0);
+        const isAlphanumeric =
+          (asciiCode >= 48 && asciiCode <= 57) ||
+          (asciiCode >= 65 && asciiCode <= 90) ||
+          (asciiCode >= 97 && asciiCode <= 122)
+            ? true
+            : false;
+        text += isAlphanumeric ? character : " ";
+        return text;
+      });
+      item.text = alphanumeric;
+      return item;
+    })
+    .map((item) => {
+      item.text = item.text
+        .split(" ")
+        .map((word) => word.trim())
+        .filter((word) => word)
+        .join(" ")
+        .toLowerCase();
+      return item;
+    });
 
-  console.log(characters);
+  await write("./output/06-data-alphanumeric.json", JSON.stringify(output));
+
+  // console.log(output.slice(200, 201));
+  // const characters = data
+  //   .reduce((characters, item) => {
+  //     const itemCharacters = item.text.split("");
+  //     for (const itemCharacter of itemCharacters) {
+  //       if (!characters.includes(itemCharacter)) {
+  //         characters.push(itemCharacter);
+  //       }
+  //     }
+  //     return characters;
+  //   }, [])
+  //   .sort();
+
+  // console.log(characters);
 };
 
 init();
-
-// original, ascii
-
-// const validCharacters = [
-//   " ",
-//   "!",
-//   '"',
-//   "#",
-//   "$",
-//   "%",
-//   "&",
-//   "'",
-//   "(",
-//   ")",
-//   "*",
-//   "+",
-//   ",",
-//   "-",
-//   ".",
-//   "/",
-//   "0",
-//   "1",
-//   "2",
-//   "3",
-//   "4",
-//   "5",
-//   "6",
-//   "7",
-//   "8",
-//   "9",
-//   ":",
-//   ";",
-//   "<",
-//   "=",
-//   ">",
-//   "?",
-//   "@",
-//   "A",
-//   "B",
-//   "C",
-//   "D",
-//   "E",
-//   "F",
-//   "G",
-//   "H",
-//   "I",
-//   "J",
-//   "K",
-//   "L",
-//   "M",
-//   "N",
-//   "O",
-//   "P",
-//   "Q",
-//   "R",
-//   "S",
-//   "T",
-//   "U",
-//   "V",
-//   "W",
-//   "X",
-//   "Y",
-//   "Z",
-//   "[",
-//   "]",
-//   "^",
-//   "_",
-//   "`",
-//   "a",
-//   "b",
-//   "c",
-//   "d",
-//   "e",
-//   "f",
-//   "g",
-//   "h",
-//   "i",
-//   "j",
-//   "k",
-//   "l",
-//   "m",
-//   "n",
-//   "o",
-//   "p",
-//   "q",
-//   "r",
-//   "s",
-//   "t",
-//   "u",
-//   "v",
-//   "w",
-//   "x",
-//   "y",
-//   "z",
-//   "{",
-//   "|",
-//   "}",
-//   "~",
-// ];
