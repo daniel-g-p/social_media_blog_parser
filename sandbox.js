@@ -8,7 +8,35 @@ const init = async () => {
       console.log(error);
       return [];
     });
-  console.log(input.length);
+  const platforms = [
+    "Facebook",
+    "Instagram",
+    "LinkedIn",
+    "Pinterest",
+    "Reddit",
+    "Snapchat",
+    "Stack Overflow",
+    "TikTok",
+    "Twitter",
+    "WhatsApp",
+    "YouTube",
+  ];
+  for (const platform of platforms) {
+    const items = input.filter((item) => item.platform === platform);
+    const categories = items.reduce((result, item) => {
+      for (const tag of item.tags) {
+        if (!result.includes(tag)) {
+          result.push(tag);
+        }
+      }
+      return result;
+    }, []);
+    console.log({
+      platform,
+      categories,
+    });
+  }
+  const categories = input.reduce;
 };
 
 init();

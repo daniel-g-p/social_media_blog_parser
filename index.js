@@ -249,10 +249,48 @@ const getPostsText = async () => {
   process.exit();
 };
 
+const filterProductNewsItems = async () => {
+  const input = await read("./output/05-data-alphanumeric.json")
+    .then((res) => {
+      return JSON.parse(res);
+    })
+    .catch((error) => {
+      console.log(error);
+      return [];
+    });
+  const relevantCategories = {
+    Facebook: "Product News",
+    Instagram: "Product",
+    LinkedIn: "Product News",
+    Pinterest: "Product",
+    Reddit: "Product & Design",
+    TikTok: "Product",
+    Twitter: "Product",
+    WhatsApp: "",
+    YouTube: "Products & Features",
+  };
+  const output = input.filter((item) => {
+    const { platform, tags } = item;
+    const relevantCategory = relevantCategories[platform];
+    return relevantCategory === "" || tags.includes(relevantCategory)
+      ? true
+      : false;
+  });
+  const outputFileName = "./output/06-data-filtered.json";
+  const outputFileData = JSON.stringify(output);
+  await write(outputFileName, outputFileData);
+};
+
 const analyzeTextSimilarities = async () => {
   const input = await read("./output/05-data-alphanumeric.json")
     .then((res) => {
       return JSON.parse(res);
+    })
+    .then((res) => {
+      return res.map((item) => {
+        item.text = item.text.split(" ").filter((word) => word.length > 3);
+        return item;
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -271,9 +309,9 @@ const analyzeTextSimilarities = async () => {
     return result;
   }, []);
 
-  const batchSize = 400000;
+  const batchSize = 5000;
   const nBatches = Math.ceil(combinations.length / batchSize);
-  let batchIndex = 1;
+  let batchIndex = 0;
 
   while (batchIndex < nBatches) {
     const output = [];
@@ -287,15 +325,15 @@ const analyzeTextSimilarities = async () => {
       const id2 = combination[1];
       const item1 = input.find((item) => item.id === id1);
       const item2 = input.find((item) => item.id === id2);
-      const words1 = item1.text.split(" ").filter((word) => word.length > 3);
-      const words2 = item2.text.split(" ").filter((word) => word.length > 3);
+      const words1 = item1.text;
+      const words2 = item2.text;
       const length1 = words1.length;
       const length2 = words2.length;
       const union = length1 + length2;
       const intersection =
-        length1 < length2
-          ? words1.filter((word) => words2.includes(word)).length
-          : words2.filter((word) => words1.includes(word)).length;
+        (words1.filter((word) => words2.includes(word)).length +
+          words2.filter((word) => words1.includes(word)).length) /
+        2;
       const jaccard = intersection / union;
       const outputItem = {
         id1,
@@ -329,4 +367,5 @@ const analyzeTextSimilarities = async () => {
 
 // gatherPosts();
 // getPostsText();
-analyzeTextSimilarities();
+filterProductNewsItems();
+// analyzeTextSimilarities();
