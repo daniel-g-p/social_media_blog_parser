@@ -37,16 +37,10 @@ init();
 // - Within-platform Jaccard
 // - Within-platform Jaccard grouped by platform (11)
 // - Within-platform Jaccard grouped by year (12)
-// - Within-platform Jaccard grouped by category (2)
 // - Within-platform Jaccard grouped by platform (11) and year (12)
-// - Within-platform Jaccard grouped by platform (11) and category (2)
-// - Within-platform Jaccard grouped by year (12) and category (2)
-// - Within-platform Jaccard grouped by platform (11), year (12), category (2)
 // - Between-platform Jaccard
 // - Between-platform Jaccard grouped by platform (11)
 // - Between-platform Jaccard grouped by year (12)
-// - Between-platform Jaccard grouped by category (2)
 // - Between-platform Jaccard grouped by platform (11) and year (12)
-// - Between-platform Jaccard grouped by platform (11) and category (2)
-// - Between-platform Jaccard grouped by year (12) and category (2)
-// - Between-platform Jaccard grouped by platform (11), year (12), category (2)
+// - Platform-to-platform Jaccard
+// - PLatform-to-platform Jaccard grouped by year
