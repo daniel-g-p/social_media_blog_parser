@@ -271,9 +271,9 @@ const analyzeTextSimilarities = async () => {
     return result;
   }, []);
 
-  const batchSize = 200000;
+  const batchSize = 400000;
   const nBatches = Math.ceil(combinations.length / batchSize);
-  let batchIndex = 5;
+  let batchIndex = 1;
 
   while (batchIndex < nBatches) {
     const output = [];
@@ -282,16 +282,6 @@ const analyzeTextSimilarities = async () => {
     const batch = combinations.slice(startIndex, endIndex);
     const nCombinations = batch.length;
     for (let i = 0; i < nCombinations; i++) {
-      console.log(
-        "Batch " +
-          (batchIndex + 1) +
-          "/" +
-          nBatches +
-          " - Combination " +
-          (i + 1) +
-          "/" +
-          nCombinations
-      );
       const combination = batch[i];
       const id1 = combination[0];
       const id2 = combination[1];
@@ -308,18 +298,22 @@ const analyzeTextSimilarities = async () => {
           : words2.filter((word) => words1.includes(word)).length;
       const jaccard = intersection / union;
       const outputItem = {
-        ids: [id1, id2],
-        platforms: [item1.platform, item2.platform],
-        dates: [item1.date, item2.date],
-        tags: [item1.tags, item2.tags],
-        titles: [item1.title, item2.title],
-        textLengths: [length1, length2],
-        jaccardIndex: jaccard,
+        id1,
+        id2,
+        platform1: item1.platform,
+        platform2: item2.platform,
+        date1: item1.date,
+        date2: item2.date,
+        tags1: item1.tags,
+        tags2: item2.tags,
+        jaccard,
       };
       output.push(outputItem);
     }
     await write(
-      "./output/06-data-similarities-batch-" + (batchIndex + 1) + ".json",
+      "./output/analysis/06-data-similarities-batch-" +
+        (batchIndex + 1) +
+        ".json",
       JSON.stringify(output)
     )
       .then(() => {
@@ -335,4 +329,4 @@ const analyzeTextSimilarities = async () => {
 
 // gatherPosts();
 // getPostsText();
-// analyzeTextSimilarities();
+analyzeTextSimilarities();
