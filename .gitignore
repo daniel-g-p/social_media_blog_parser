@@ -1,3 +1,5 @@
 node_modules/
 .env
 */*.xlsx
+output/06-data-similarities-samples/
+output/06*
