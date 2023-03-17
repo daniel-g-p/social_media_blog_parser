@@ -405,10 +405,15 @@ const analyzeTextSimilarities = async () => {
         ? true
         : false;
     })
-    .reduce((result, item, index) => {
-      const n = index + 1;
-      return result * (index / n) + item.jaccard * (1 / n);
-    }, 0);
+    .reduce(
+      (result, item, index) => {
+        const n = index + 1;
+        result.jaccard = result.jaccard * (index / n) + item.jaccard * (1 / n);
+        result.count++;
+        return result;
+      },
+      { count: 0, jaccard: 0 }
+    );
 
   // Between-platform Jaccard index
   const betweenPlatform = input
@@ -421,10 +426,15 @@ const analyzeTextSimilarities = async () => {
         ? true
         : false;
     })
-    .reduce((result, item, index) => {
-      const n = index + 1;
-      return result * (index / n) + item.jaccard * (1 / n);
-    }, 0);
+    .reduce(
+      (result, item, index) => {
+        const n = index + 1;
+        result.jaccard = result.jaccard * (index / n) + item.jaccard * (1 / n);
+        result.count++;
+        return result;
+      },
+      { count: 0, jaccard: 0 }
+    );
 
   // Within-platform Jaccard index by platform
   const withinPlatformByPlatform = input
@@ -702,7 +712,7 @@ const analyzeTextSimilarities = async () => {
     .map((combination) => {
       return {
         platforms: combination,
-        jaccard: input
+        data: input
           .filter((item) => {
             return (item.platform1 === combination[0] &&
               item.platform2 === combination[1]) ||
@@ -717,10 +727,16 @@ const analyzeTextSimilarities = async () => {
             );
             return timeGap < 1000 * 60 * 60 * 24 * 365 ? true : false;
           })
-          .reduce((result, item, index) => {
-            const n = index + 1;
-            return result * (index / n) + item.jaccard * (1 / n);
-          }, 0),
+          .reduce(
+            (result, item, index) => {
+              const n = index + 1;
+              result.jaccard =
+                result.jaccard * (index / n) + item.jaccard * (1 / n);
+              result.count++;
+              return result;
+            },
+            { count: 0, jaccard: 0 }
+          ),
       };
     });
 
@@ -735,7 +751,7 @@ const analyzeTextSimilarities = async () => {
     .map((combination) => {
       return {
         platforms: combination,
-        years: input
+        data: input
           .filter((item) => {
             return (item.platform1 === combination[0] &&
               item.platform2 === combination[1]) ||

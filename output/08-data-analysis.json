@@ -1,6 +1,6 @@
 {
-  "withinPlatform": 0.1574873783276119,
-  "betweenPlatform": 0.10102607624455172,
+  "withinPlatform": { "count": 36452, "jaccard": 0.1574873783276119 },
+  "betweenPlatform": { "count": 82849, "jaccard": 0.10102607624455172 },
   "withinPlatformByPlatform": [
     { "platform": "TikTok", "count": 809, "jaccard": 0.14197739294576958 },
     { "platform": "Facebook", "count": 7163, "jaccard": 0.1441930256668094 },
@@ -1366,47 +1366,155 @@
     }
   ],
   "platformToPlatform": [
-    { "platforms": ["Facebook", "Instagram"], "jaccard": 0.11766700099192512 },
-    { "platforms": ["Facebook", "LinkedIn"], "jaccard": 0.09849235179419312 },
-    { "platforms": ["Facebook", "Pinterest"], "jaccard": 0.09774559255054009 },
-    { "platforms": ["Facebook", "Reddit"], "jaccard": 0.11683890035237869 },
-    { "platforms": ["Facebook", "TikTok"], "jaccard": 0.10863795808519877 },
-    { "platforms": ["Facebook", "Twitter"], "jaccard": 0.12202105459045828 },
-    { "platforms": ["Facebook", "WhatsApp"], "jaccard": 0.10504059594035833 },
-    { "platforms": ["Facebook", "YouTube"], "jaccard": 0.1036729338871698 },
-    { "platforms": ["Instagram", "LinkedIn"], "jaccard": 0.08537675273449986 },
-    { "platforms": ["Instagram", "Pinterest"], "jaccard": 0.0926954402886096 },
-    { "platforms": ["Instagram", "Reddit"], "jaccard": 0.10082139104729457 },
-    { "platforms": ["Instagram", "TikTok"], "jaccard": 0.09695813749133932 },
-    { "platforms": ["Instagram", "Twitter"], "jaccard": 0.10798011826170682 },
-    { "platforms": ["Instagram", "WhatsApp"], "jaccard": 0.09944820089761312 },
-    { "platforms": ["Instagram", "YouTube"], "jaccard": 0.10595679744465383 },
-    { "platforms": ["LinkedIn", "Pinterest"], "jaccard": 0.0803801738393805 },
-    { "platforms": ["LinkedIn", "Reddit"], "jaccard": 0.08701628418256788 },
-    { "platforms": ["LinkedIn", "TikTok"], "jaccard": 0.08493869541089322 },
-    { "platforms": ["LinkedIn", "Twitter"], "jaccard": 0.0935835187151423 },
-    { "platforms": ["LinkedIn", "WhatsApp"], "jaccard": 0.08285520598001954 },
-    { "platforms": ["LinkedIn", "YouTube"], "jaccard": 0.09050983725897357 },
-    { "platforms": ["Pinterest", "Reddit"], "jaccard": 0.0857789166396919 },
-    { "platforms": ["Pinterest", "TikTok"], "jaccard": 0.08728294985460465 },
-    { "platforms": ["Pinterest", "Twitter"], "jaccard": 0.0923015634643106 },
-    { "platforms": ["Pinterest", "WhatsApp"], "jaccard": 0.08442441812184205 },
-    { "platforms": ["Pinterest", "YouTube"], "jaccard": 0.09639202832883967 },
-    { "platforms": ["Reddit", "TikTok"], "jaccard": 0.10447189241340571 },
-    { "platforms": ["Reddit", "Twitter"], "jaccard": 0.10920776229215406 },
-    { "platforms": ["Reddit", "WhatsApp"], "jaccard": 0.09631509368613736 },
-    { "platforms": ["Reddit", "YouTube"], "jaccard": 0.11710659906001682 },
-    { "platforms": ["TikTok", "Twitter"], "jaccard": 0.10230189897564268 },
-    { "platforms": ["TikTok", "WhatsApp"], "jaccard": 0.09410227015738043 },
-    { "platforms": ["TikTok", "YouTube"], "jaccard": 0.11832658968329228 },
-    { "platforms": ["Twitter", "WhatsApp"], "jaccard": 0.10635077141864789 },
-    { "platforms": ["Twitter", "YouTube"], "jaccard": 0.12113466926584658 },
-    { "platforms": ["WhatsApp", "YouTube"], "jaccard": 0.08099130636112538 }
+    {
+      "platforms": ["Facebook", "Instagram"],
+      "data": { "count": 6891, "jaccard": 0.11766700099192512 }
+    },
+    {
+      "platforms": ["Facebook", "LinkedIn"],
+      "data": { "count": 3322, "jaccard": 0.09849235179419312 }
+    },
+    {
+      "platforms": ["Facebook", "Pinterest"],
+      "data": { "count": 5408, "jaccard": 0.09774559255054009 }
+    },
+    {
+      "platforms": ["Facebook", "Reddit"],
+      "data": { "count": 990, "jaccard": 0.11683890035237869 }
+    },
+    {
+      "platforms": ["Facebook", "TikTok"],
+      "data": { "count": 3095, "jaccard": 0.10863795808519877 }
+    },
+    {
+      "platforms": ["Facebook", "Twitter"],
+      "data": { "count": 3530, "jaccard": 0.12202105459045828 }
+    },
+    {
+      "platforms": ["Facebook", "WhatsApp"],
+      "data": { "count": 3905, "jaccard": 0.10504059594035833 }
+    },
+    {
+      "platforms": ["Facebook", "YouTube"],
+      "data": { "count": 12883, "jaccard": 0.1036729338871698 }
+    },
+    {
+      "platforms": ["Instagram", "LinkedIn"],
+      "data": { "count": 2373, "jaccard": 0.08537675273449986 }
+    },
+    {
+      "platforms": ["Instagram", "Pinterest"],
+      "data": { "count": 2812, "jaccard": 0.0926954402886096 }
+    },
+    {
+      "platforms": ["Instagram", "Reddit"],
+      "data": { "count": 713, "jaccard": 0.10082139104729457 }
+    },
+    {
+      "platforms": ["Instagram", "TikTok"],
+      "data": { "count": 1257, "jaccard": 0.09695813749133932 }
+    },
+    {
+      "platforms": ["Instagram", "Twitter"],
+      "data": { "count": 1288, "jaccard": 0.10798011826170682 }
+    },
+    {
+      "platforms": ["Instagram", "WhatsApp"],
+      "data": { "count": 2013, "jaccard": 0.09944820089761312 }
+    },
+    {
+      "platforms": ["Instagram", "YouTube"],
+      "data": { "count": 4416, "jaccard": 0.10595679744465383 }
+    },
+    {
+      "platforms": ["LinkedIn", "Pinterest"],
+      "data": { "count": 1426, "jaccard": 0.0803801738393805 }
+    },
+    {
+      "platforms": ["LinkedIn", "Reddit"],
+      "data": { "count": 357, "jaccard": 0.08701628418256788 }
+    },
+    {
+      "platforms": ["LinkedIn", "TikTok"],
+      "data": { "count": 792, "jaccard": 0.08493869541089322 }
+    },
+    {
+      "platforms": ["LinkedIn", "Twitter"],
+      "data": { "count": 865, "jaccard": 0.0935835187151423 }
+    },
+    {
+      "platforms": ["LinkedIn", "WhatsApp"],
+      "data": { "count": 1031, "jaccard": 0.08285520598001954 }
+    },
+    {
+      "platforms": ["LinkedIn", "YouTube"],
+      "data": { "count": 2846, "jaccard": 0.09050983725897357 }
+    },
+    {
+      "platforms": ["Pinterest", "Reddit"],
+      "data": { "count": 396, "jaccard": 0.0857789166396919 }
+    },
+    {
+      "platforms": ["Pinterest", "TikTok"],
+      "data": { "count": 1673, "jaccard": 0.08728294985460465 }
+    },
+    {
+      "platforms": ["Pinterest", "Twitter"],
+      "data": { "count": 1780, "jaccard": 0.0923015634643106 }
+    },
+    {
+      "platforms": ["Pinterest", "WhatsApp"],
+      "data": { "count": 1658, "jaccard": 0.08442441812184205 }
+    },
+    {
+      "platforms": ["Pinterest", "YouTube"],
+      "data": { "count": 2628, "jaccard": 0.09639202832883967 }
+    },
+    {
+      "platforms": ["Reddit", "TikTok"],
+      "data": { "count": 249, "jaccard": 0.10447189241340571 }
+    },
+    {
+      "platforms": ["Reddit", "Twitter"],
+      "data": { "count": 326, "jaccard": 0.10920776229215406 }
+    },
+    {
+      "platforms": ["Reddit", "WhatsApp"],
+      "data": { "count": 326, "jaccard": 0.09631509368613736 }
+    },
+    {
+      "platforms": ["Reddit", "YouTube"],
+      "data": { "count": 499, "jaccard": 0.11710659906001682 }
+    },
+    {
+      "platforms": ["TikTok", "Twitter"],
+      "data": { "count": 1735, "jaccard": 0.10230189897564268 }
+    },
+    {
+      "platforms": ["TikTok", "WhatsApp"],
+      "data": { "count": 1172, "jaccard": 0.09410227015738043 }
+    },
+    {
+      "platforms": ["TikTok", "YouTube"],
+      "data": { "count": 1217, "jaccard": 0.11832658968329228 }
+    },
+    {
+      "platforms": ["Twitter", "WhatsApp"],
+      "data": { "count": 1283, "jaccard": 0.10635077141864789 }
+    },
+    {
+      "platforms": ["Twitter", "YouTube"],
+      "data": { "count": 1377, "jaccard": 0.12113466926584658 }
+    },
+    {
+      "platforms": ["WhatsApp", "YouTube"],
+      "data": { "count": 4317, "jaccard": 0.08099130636112538 }
+    }
   ],
   "platformToPlatformByYear": [
     {
       "platforms": ["Facebook", "Instagram"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 57, "jaccard": 0.17148143927928988 },
         { "year": 2022, "count": 1204, "jaccard": 0.1446123785233106 },
         { "year": 2021, "count": 690, "jaccard": 0.1281358504680387 },
@@ -1424,7 +1532,7 @@
     },
     {
       "platforms": ["Facebook", "LinkedIn"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 10, "jaccard": 0.11244308299526307 },
         { "year": 2022, "count": 374, "jaccard": 0.10686404451445969 },
         { "year": 2021, "count": 1169, "jaccard": 0.08462399832330349 },
@@ -1444,7 +1552,7 @@
     },
     {
       "platforms": ["Facebook", "Pinterest"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 40, "jaccard": 0.06668658356810428 },
         { "year": 2022, "count": 660, "jaccard": 0.09094628498342942 },
         { "year": 2021, "count": 2146, "jaccard": 0.08867392361820718 },
@@ -1461,7 +1569,7 @@
     },
     {
       "platforms": ["Facebook", "Reddit"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 8, "jaccard": 0.140435110965852 },
         { "year": 2022, "count": 380, "jaccard": 0.1278427682232855 },
         { "year": 2021, "count": 466, "jaccard": 0.11378246996553579 },
@@ -1474,7 +1582,7 @@
     },
     {
       "platforms": ["Facebook", "TikTok"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 96, "jaccard": 0.12249890063779725 },
         { "year": 2022, "count": 512, "jaccard": 0.12603037020370908 },
         { "year": 2021, "count": 2227, "jaccard": 0.11709034437807647 },
@@ -1486,7 +1594,7 @@
     },
     {
       "platforms": ["Facebook", "Twitter"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 31, "jaccard": 0.11289013529031222 },
         { "year": 2022, "count": 1292, "jaccard": 0.11978511194232375 },
         { "year": 2021, "count": 3245, "jaccard": 0.1236572059658013 },
@@ -1497,7 +1605,7 @@
     },
     {
       "platforms": ["Facebook", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 84, "jaccard": 0.12551265094872424 },
         { "year": 2022, "count": 592, "jaccard": 0.1261454028401988 },
         { "year": 2021, "count": 1553, "jaccard": 0.11627494243037503 },
@@ -1517,7 +1625,7 @@
     },
     {
       "platforms": ["Facebook", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 79, "jaccard": 0.126042574849897 },
         { "year": 2022, "count": 1059, "jaccard": 0.1300332911598849 },
         { "year": 2021, "count": 1767, "jaccard": 0.13843290609403686 },
@@ -1540,7 +1648,7 @@
     },
     {
       "platforms": ["Instagram", "LinkedIn"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 5, "jaccard": 0.14036303047862975 },
         { "year": 2022, "count": 287, "jaccard": 0.10472202269562206 },
         { "year": 2021, "count": 132, "jaccard": 0.07145200054447819 },
@@ -1556,7 +1664,7 @@
     },
     {
       "platforms": ["Instagram", "Pinterest"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 29, "jaccard": 0.06530000451924839 },
         { "year": 2022, "count": 542, "jaccard": 0.08605117158465021 },
         { "year": 2021, "count": 238, "jaccard": 0.0744415684003994 },
@@ -1572,7 +1680,7 @@
     },
     {
       "platforms": ["Instagram", "Reddit"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 5, "jaccard": 0.166601287234736 },
         { "year": 2022, "count": 252, "jaccard": 0.12773325949080783 },
         { "year": 2021, "count": 63, "jaccard": 0.11128156986287696 },
@@ -1585,7 +1693,7 @@
     },
     {
       "platforms": ["Instagram", "TikTok"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 80, "jaccard": 0.12081853450587832 },
         { "year": 2022, "count": 455, "jaccard": 0.1223509843613932 },
         { "year": 2021, "count": 229, "jaccard": 0.12047848631794217 },
@@ -1597,7 +1705,7 @@
     },
     {
       "platforms": ["Instagram", "Twitter"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 28, "jaccard": 0.12239917928817019 },
         { "year": 2022, "count": 699, "jaccard": 0.12598352987602987 },
         { "year": 2021, "count": 259, "jaccard": 0.10527360179481964 },
@@ -1608,7 +1716,7 @@
     },
     {
       "platforms": ["Instagram", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 68, "jaccard": 0.13597365236539136 },
         { "year": 2022, "count": 510, "jaccard": 0.12645023238078323 },
         { "year": 2021, "count": 158, "jaccard": 0.1152460318103201 },
@@ -1626,7 +1734,7 @@
     },
     {
       "platforms": ["Instagram", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 59, "jaccard": 0.13217736786474604 },
         { "year": 2022, "count": 881, "jaccard": 0.13017901672111024 },
         { "year": 2021, "count": 194, "jaccard": 0.1319075283195245 },
@@ -1644,7 +1752,7 @@
     },
     {
       "platforms": ["LinkedIn", "Pinterest"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 5, "jaccard": 0.03809860815317601 },
         { "year": 2022, "count": 171, "jaccard": 0.07356492711452867 },
         { "year": 2021, "count": 420, "jaccard": 0.05985371613157683 },
@@ -1660,7 +1768,7 @@
     },
     {
       "platforms": ["LinkedIn", "Reddit"],
-      "years": [
+      "data": [
         { "year": 2022, "count": 89, "jaccard": 0.09682621930394343 },
         { "year": 2021, "count": 91, "jaccard": 0.07037936961926892 },
         { "year": 2020, "count": 31, "jaccard": 0.10016583626647763 },
@@ -1672,7 +1780,7 @@
     },
     {
       "platforms": ["LinkedIn", "TikTok"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 20, "jaccard": 0.10115102396365644 },
         { "year": 2022, "count": 144, "jaccard": 0.09797563261287716 },
         { "year": 2021, "count": 437, "jaccard": 0.07478944132639638 },
@@ -1684,7 +1792,7 @@
     },
     {
       "platforms": ["LinkedIn", "Twitter"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 5, "jaccard": 0.08949169256777242 },
         { "year": 2022, "count": 304, "jaccard": 0.0915601496804495 },
         { "year": 2021, "count": 669, "jaccard": 0.0823127408464591 },
@@ -1695,7 +1803,7 @@
     },
     {
       "platforms": ["LinkedIn", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 15, "jaccard": 0.11660958710598986 },
         { "year": 2022, "count": 161, "jaccard": 0.10163128160654236 },
         { "year": 2021, "count": 315, "jaccard": 0.07705630146601693 },
@@ -1712,7 +1820,7 @@
     },
     {
       "platforms": ["LinkedIn", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 10, "jaccard": 0.09840986734078488 },
         { "year": 2022, "count": 279, "jaccard": 0.09870825616149788 },
         { "year": 2021, "count": 355, "jaccard": 0.08501399878824338 },
@@ -1734,7 +1842,7 @@
     },
     {
       "platforms": ["Pinterest", "Reddit"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 3, "jaccard": 0.029643329132594237 },
         { "year": 2022, "count": 161, "jaccard": 0.08769206675072772 },
         { "year": 2021, "count": 160, "jaccard": 0.07363488614627521 },
@@ -1747,7 +1855,7 @@
     },
     {
       "platforms": ["Pinterest", "TikTok"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 48, "jaccard": 0.0793881174615581 },
         { "year": 2022, "count": 250, "jaccard": 0.09457393475942634 },
         { "year": 2021, "count": 780, "jaccard": 0.08613805045942242 },
@@ -1758,7 +1866,7 @@
     },
     {
       "platforms": ["Pinterest", "Twitter"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 11, "jaccard": 0.06151535796176925 },
         { "year": 2022, "count": 541, "jaccard": 0.082941466682448 },
         { "year": 2021, "count": 1253, "jaccard": 0.08483813929890949 },
@@ -1769,7 +1877,7 @@
     },
     {
       "platforms": ["Pinterest", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 42, "jaccard": 0.07051359692955864 },
         { "year": 2022, "count": 284, "jaccard": 0.0813867556821098 },
         { "year": 2021, "count": 566, "jaccard": 0.0804808571350422 },
@@ -1788,7 +1896,7 @@
     },
     {
       "platforms": ["Pinterest", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 40, "jaccard": 0.05991826943240602 },
         { "year": 2022, "count": 504, "jaccard": 0.09265782813463545 },
         { "year": 2021, "count": 644, "jaccard": 0.09190859473662354 },
@@ -1807,7 +1915,7 @@
     },
     {
       "platforms": ["Reddit", "TikTok"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 12, "jaccard": 0.11974246422805755 },
         { "year": 2022, "count": 132, "jaccard": 0.12310761284554679 },
         { "year": 2021, "count": 152, "jaccard": 0.11041240144430715 },
@@ -1818,7 +1926,7 @@
     },
     {
       "platforms": ["Reddit", "Twitter"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 5, "jaccard": 0.0959103191650226 },
         { "year": 2022, "count": 228, "jaccard": 0.11581350860082576 },
         { "year": 2021, "count": 218, "jaccard": 0.10282273729694208 },
@@ -1829,7 +1937,7 @@
     },
     {
       "platforms": ["Reddit", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 11, "jaccard": 0.10480116617035042 },
         { "year": 2022, "count": 150, "jaccard": 0.11386621148659998 },
         { "year": 2021, "count": 118, "jaccard": 0.0995673503564945 },
@@ -1842,7 +1950,7 @@
     },
     {
       "platforms": ["Reddit", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 10, "jaccard": 0.1272418758195397 },
         { "year": 2022, "count": 271, "jaccard": 0.12208879242595692 },
         { "year": 2021, "count": 160, "jaccard": 0.11798685404742157 },
@@ -1855,7 +1963,7 @@
     },
     {
       "platforms": ["TikTok", "Twitter"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 14, "jaccard": 0.08547060951256572 },
         { "year": 2022, "count": 423, "jaccard": 0.1097864306073361 },
         { "year": 2021, "count": 1363, "jaccard": 0.10911981239585365 },
@@ -1866,7 +1974,7 @@
     },
     {
       "platforms": ["TikTok", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 78, "jaccard": 0.097228172877214 },
         { "year": 2022, "count": 236, "jaccard": 0.10202263151112011 },
         { "year": 2021, "count": 593, "jaccard": 0.10451693515478637 },
@@ -1877,7 +1985,7 @@
     },
     {
       "platforms": ["TikTok", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 96, "jaccard": 0.11908595874863377 },
         { "year": 2022, "count": 413, "jaccard": 0.12663518939152568 },
         { "year": 2021, "count": 646, "jaccard": 0.13543498734906714 },
@@ -1889,7 +1997,7 @@
     },
     {
       "platforms": ["Twitter", "WhatsApp"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 28, "jaccard": 0.11037931764045378 },
         { "year": 2022, "count": 475, "jaccard": 0.11547688387040657 },
         { "year": 2021, "count": 910, "jaccard": 0.1144687740085199 },
@@ -1900,7 +2008,7 @@
     },
     {
       "platforms": ["Twitter", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 35, "jaccard": 0.10007473234548193 },
         { "year": 2022, "count": 794, "jaccard": 0.1184915407958534 },
         { "year": 2021, "count": 919, "jaccard": 0.1294006477352105 },
@@ -1911,7 +2019,7 @@
     },
     {
       "platforms": ["WhatsApp", "YouTube"],
-      "years": [
+      "data": [
         { "year": 2023, "count": 84, "jaccard": 0.11133917238643848 },
         { "year": 2022, "count": 481, "jaccard": 0.11233151545360405 },
         { "year": 2021, "count": 449, "jaccard": 0.1160091115882617 },
