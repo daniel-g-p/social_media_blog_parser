@@ -282,7 +282,7 @@ const filterProductNewsItems = async () => {
 };
 
 const analyzeTextSimilarities = async () => {
-  const input = await read("./output/05-data-alphanumeric.json")
+  const input = await read("./output/06-data-filtered.json")
     .then((res) => {
       return JSON.parse(res);
     })
@@ -309,7 +309,9 @@ const analyzeTextSimilarities = async () => {
     return result;
   }, []);
 
-  const batchSize = 5000;
+  console.log(combinations.length);
+
+  const batchSize = 100000;
   const nBatches = Math.ceil(combinations.length / batchSize);
   let batchIndex = 0;
 
@@ -320,6 +322,11 @@ const analyzeTextSimilarities = async () => {
     const batch = combinations.slice(startIndex, endIndex);
     const nCombinations = batch.length;
     for (let i = 0; i < nCombinations; i++) {
+      console.log(
+        `Batch ${batchIndex + 1}/${nBatches} - Combination ${
+          i + 1
+        }/${nCombinations}`
+      );
       const combination = batch[i];
       const id1 = combination[0];
       const id2 = combination[1];
@@ -349,9 +356,7 @@ const analyzeTextSimilarities = async () => {
       output.push(outputItem);
     }
     await write(
-      "./output/analysis/06-data-similarities-batch-" +
-        (batchIndex + 1) +
-        ".json",
+      "./output/07-data-similarities-batch-" + (batchIndex + 1) + ".json",
       JSON.stringify(output)
     )
       .then(() => {
@@ -365,7 +370,7 @@ const analyzeTextSimilarities = async () => {
   }
 };
 
-// gatherPosts();
+// getPosts();
 // getPostsText();
-filterProductNewsItems();
-// analyzeTextSimilarities();
+// filterProductNewsItems();
+analyzeTextSimilarities();
