@@ -614,8 +614,9 @@ const analyzeTextSimilarities = async () => {
         }
       }
     }
-    const filePath =
-      "./output/08-data-analysis-" + platform.toLowerCase() + ".json";
+    const filePath = platform
+      ? "./output/08-data-analysis-all.json"
+      : "./output/08-data-analysis-" + platform.toLowerCase() + ".json";
     const fileData = JSON.stringify(output);
     await write(filePath, fileData);
     output = [];
