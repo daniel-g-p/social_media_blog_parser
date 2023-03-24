@@ -470,10 +470,10 @@ const analyzeTextSimilarities = async () => {
   const timeframes = [null, 365, 91, 30];
 
   // 4. Create output target object
-  let output = [];
 
   // 5. Loop through segmentation criteria combinations
   for (const platform of platforms) {
+    const output = [];
     for (const basePlatform of platforms) {
       for (const year of years) {
         for (const month of months) {
@@ -619,7 +619,6 @@ const analyzeTextSimilarities = async () => {
       : "./output/08-data-analysis-all.json";
     const fileData = JSON.stringify(output);
     await write(filePath, fileData);
-    output = [];
   }
 };
 
@@ -627,4 +626,4 @@ const analyzeTextSimilarities = async () => {
 // getPostsText();
 // filterProductNewsItems();
 // computeTextSimilarities();
-analyzeTextSimilarities();
+// analyzeTextSimilarities();
