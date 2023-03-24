@@ -1,6 +1,8 @@
 import read from "./utilities/read.js";
 import write from "./utilities/write.js";
 
+import aoaToXlsx from "./utilities/aoa-to-xlsx.js";
+
 const init = async () => {
   const input = await read("./output/08-data-analysis.json")
     .then((res) => JSON.parse(res))
@@ -59,21 +61,17 @@ const init = async () => {
       item.histogram[10],
     ];
   });
-  await write(
-    "./output/08-data-analysis.xlsx",
-    JSON.stringify([columns, ...rows])
-  );
+  aoaToXlsx("./output/08-data-analysis.xlsx", [columns, ...rows]);
 };
 
 init();
 
-// - Within-platform Jaccard
-// - Within-platform Jaccard grouped by platform (11)
-// - Within-platform Jaccard grouped by year (12)
-// - Within-platform Jaccard grouped by platform (11) and year (12)
-// - Between-platform Jaccard
-// - Between-platform Jaccard grouped by platform (11)
-// - Between-platform Jaccard grouped by year (12)
-// - Between-platform Jaccard grouped by platform (11) and year (12)
-// - Platform-to-platform Jaccard
-// - PLatform-to-platform Jaccard grouped by year
+// Q1: Is there a significant increase in text similarity?
+
+// Q2: Which platforms copy the most/least?
+
+// Q3: Which platforms are copied the most/least?
+
+// Q4: How quickly do platforms react to changes in other platforms?
+
+// Q5: Which platforms are closest/furthest from each other?
