@@ -371,7 +371,67 @@ const computeTextSimilarities = async () => {
 };
 
 const analyzeTextSimilarities = async () => {
+  // 1. Read computed Jaccard similarities data
+  const data = [];
+  for (let i = 1; i <= 10; i++) {
+    const fileName = "./output/07-data-similarities-" + i + ".json";
+    const fileData = await read(fileName)
+      .then((res) => JSON.parse(res))
+      .catch((error) => {
+        console.log(error);
+        return [];
+      });
+    data.push(...fileData);
+  }
+  console.log(data.length + " data points loaded...");
+
+  // 2. Format data to suit analysis operations
+  const input = data
+    .filter((item) => item.platform1 !== item.platform2)
+    .map((item) => {
+      item.ids = [item.id1, item.id2];
+      item.platforms = [item.platform1, item.platform2];
+      item.dates = [new Date(item.date1), new Date(item.date2)];
+      delete item.id1;
+      delete item.id2;
+      delete item.platform1;
+      delete item.platform2;
+      delete item.date1;
+      delete item.date2;
+      delete item.tags1;
+      delete item.tags2;
+      return item;
+    })
+    .map((item) => {
+      const index =
+        item.dates[0] > item.dates[1]
+          ? 0
+          : item.dates[0] < item.dates[1]
+          ? 1
+          : -1;
+      return {
+        ids: item.ids,
+        platform:
+          index === 0
+            ? [item.platforms[0]]
+            : index === 1
+            ? [item.platforms[1]]
+            : item.platforms,
+        basePlatform:
+          index === 0
+            ? [item.platforms[1]]
+            : index === 1
+            ? [item.platforms[0]]
+            : item.platforms,
+        date: index === 0 ? item.dates[0] : item.dates[1],
+        baseDate: index === 0 ? item.dates[1] : item.dates[0],
+        jaccard: item.jaccard,
+      };
+    });
+
+  // 3. Define segmentation criteria for analysis
   const platforms = [
+    null,
     "Facebook",
     "Instagram",
     "LinkedIn",
@@ -382,440 +442,184 @@ const analyzeTextSimilarities = async () => {
     "WhatsApp",
     "YouTube",
   ];
-  const input = [];
-  for (let i = 1; i <= 10; i++) {
-    const fileName = "./output/07-data-similarities-" + i + ".json";
-    const fileData = await read(fileName)
-      .then((res) => JSON.parse(res))
-      .catch((error) => {
-        console.log(error);
-        return [];
-      });
-    input.push(...fileData);
+  const years = [
+    null,
+    2023,
+    2022,
+    2021,
+    2020,
+    2019,
+    2018,
+    2017,
+    2016,
+    2015,
+    2014,
+    2013,
+    2012,
+    2011,
+    2010,
+    2009,
+    2008,
+    2007,
+    2006,
+    2005,
+    2004,
+    2003,
+  ];
+  const months = [null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const timeframes = [null, 365, 91, 30];
+
+  // 4. Create output target object
+  let output = [];
+
+  // 5. Loop through segmentation criteria combinations
+  for (const platform of platforms) {
+    for (const basePlatform of platforms) {
+      for (const year of years) {
+        for (const month of months) {
+          if (month === null || year !== null) {
+            for (const timeframe of timeframes) {
+              // 5.1 Extract Jaccard Index values from data
+              const values = input
+                .filter((item) => {
+                  return platform === null || item.platform.includes(platform)
+                    ? true
+                    : false;
+                })
+                .filter((item) => {
+                  return basePlatform === null ||
+                    item.basePlatform.includes(basePlatform)
+                    ? true
+                    : false;
+                })
+                .filter((item) => {
+                  return year === null || item.date.getFullYear() === year
+                    ? true
+                    : false;
+                })
+                .filter((item) => {
+                  return year === null ||
+                    month === null ||
+                    item.date.getMonth() === month
+                    ? true
+                    : false;
+                })
+                .filter((item) => {
+                  return timeframe === null ||
+                    item.date.getTime() - item.baseDate.getTime() <
+                      timeframe * 24 * 60 * 60 * 1000
+                    ? true
+                    : false;
+                })
+                .map((item) => item.jaccard)
+                .sort((a, b) => a - b);
+
+              // 5.2 Compute mean
+              const mean = values.reduce((result, value, index) => {
+                const n = index + 1;
+                return (1 / n) * value + ((n - 1) / n) * result;
+              }, 0);
+
+              // 5.3 Compute sample size
+              const sampleSize = values.length;
+
+              // 5.4 Compute standard deviation
+              const standardDeviation = Math.sqrt(
+                values.reduce((result, value) => {
+                  const meanDeviation = value - mean;
+                  return result + meanDeviation * meanDeviation;
+                }, 0) /
+                  (sampleSize - 1)
+              );
+
+              // 5.5 Compute quartiles
+              const quartile1 = values[Math.round((1 * sampleSize) / 4) - 1];
+              const median = values[Math.round((2 * sampleSize) / 4) - 1];
+              const quartile3 = values[Math.round((3 * sampleSize) / 4) - 1];
+
+              // 5.6 Compute histogram
+              const minimum = values[0];
+              const maximum = values[sampleSize - 1];
+              const range = maximum - minimum;
+              const numberOfGroups = 10;
+              const groupsStep = range / numberOfGroups;
+              const histogram = [];
+              for (let i = 0; i < numberOfGroups; i++) {
+                const groupMaximum = minimum + (i + 1) * groupsStep;
+                const groupN = i
+                  ? values.filter((value) => value <= groupMaximum).length -
+                    histogram.reduce((result, value) => result + value)
+                  : values.filter((value) => value <= groupMaximum).length;
+                histogram.push(groupN);
+              }
+
+              // 5.7 Create output item
+              const outputItem = {
+                platform: platform === null ? "All" : platform,
+                basePlatform: basePlatform === null ? "All" : basePlatform,
+                year: year === null ? "All" : year.toString(),
+                month:
+                  month === null
+                    ? "Full Year"
+                    : month === 0
+                    ? "January"
+                    : month === 1
+                    ? "February"
+                    : month === 2
+                    ? "March"
+                    : month === 3
+                    ? "April"
+                    : month === 4
+                    ? "May"
+                    : month === 5
+                    ? "June"
+                    : month === 6
+                    ? "July"
+                    : month === 7
+                    ? "August"
+                    : month === 8
+                    ? "September"
+                    : month === 9
+                    ? "October"
+                    : month === 10
+                    ? "November"
+                    : month === 11
+                    ? "December"
+                    : "",
+                timeframe:
+                  timeframe === 365
+                    ? "Yearly"
+                    : timeframe === 91
+                    ? "Quarterly"
+                    : timeframe === 30
+                    ? "Monthly"
+                    : "All-time",
+                mean,
+                sampleSize,
+                standardDeviation,
+                quartile1,
+                median,
+                quartile3,
+                histogram,
+              };
+
+              if (outputItem.sampleSize > 0) {
+                output.push(outputItem);
+              }
+
+              const textUpdate = `Platform: ${outputItem.platform} / Base Platform: ${outputItem.basePlatform} / Date range: ${outputItem.month} ${outputItem.year} / Timeframe: ${outputItem.timeframe}`;
+              console.log(textUpdate);
+            }
+          }
+        }
+      }
+    }
+    const filePath =
+      "./output/08-data-analysis-" + platform.toLowerCase() + ".json";
+    const fileData = JSON.stringify(output);
+    await write(filePath, fileData);
+    output = [];
   }
-
-  // Within-platform Jaccard index
-  const withinPlatform = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 === item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce(
-      (result, item, index) => {
-        const n = index + 1;
-        result.jaccard = result.jaccard * (index / n) + item.jaccard * (1 / n);
-        result.count++;
-        return result;
-      },
-      { count: 0, jaccard: 0 }
-    );
-
-  // Between-platform Jaccard index
-  const betweenPlatform = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 !== item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce(
-      (result, item, index) => {
-        const n = index + 1;
-        result.jaccard = result.jaccard * (index / n) + item.jaccard * (1 / n);
-        result.count++;
-        return result;
-      },
-      { count: 0, jaccard: 0 }
-    );
-
-  // Within-platform Jaccard index by platform
-  const withinPlatformByPlatform = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 === item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce((result, item) => {
-      const group = result.find((group) => group.platform === item.platform1);
-      if (group) {
-        const n = group.count + 1;
-        group.jaccard = group.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group.count = n;
-      } else {
-        const newGroup = {
-          platform: item.platform1,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup);
-      }
-      return result;
-    }, []);
-
-  // Between-platform Jaccard index by platform
-  const betweenPlatformByPlatform = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 !== item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce((result, item) => {
-      const group1 = result.find((group) => group.platform === item.platform1);
-      if (group1) {
-        const n = group1.count + 1;
-        group1.jaccard =
-          group1.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group1.count = n;
-      } else {
-        const newGroup1 = {
-          platform: item.platform1,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup1);
-      }
-      const group2 = result.find((group) => group.platform === item.platform2);
-      if (group2) {
-        const n = group2.count + 1;
-        group2.jaccard =
-          group2.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group2.count = n;
-      } else {
-        const newGroup2 = {
-          platform: item.platform2,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup2);
-      }
-      return result;
-    }, []);
-
-  // Within-platform Jaccard index by year
-  const withinPlatformByYear = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 === item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce((result, item) => {
-      const year1 = new Date(item.date1).getFullYear();
-      const year2 = new Date(item.date2).getFullYear();
-      const group1 = result.find((group) => group.year === year1);
-      if (group1) {
-        const n = group1.count + 1;
-        group1.jaccard =
-          group1.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group1.count = n;
-      } else {
-        const newGroup1 = {
-          year: year1,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup1);
-      }
-      const group2 = result.find((group) => group.year === year2);
-      if (group2) {
-        const n = group2.count + 1;
-        group2.jaccard =
-          group2.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group2.count = n;
-      } else {
-        const newGroup2 = {
-          year: year2,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup2);
-      }
-      return result;
-    }, []);
-
-  // Between-platform Jaccard index by year
-  const betweenPlatformByYear = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 !== item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce((result, item) => {
-      const year1 = new Date(item.date1).getFullYear();
-      const year2 = new Date(item.date2).getFullYear();
-      const group1 = result.find((group) => group.year === year1);
-      if (group1) {
-        const n = group1.count + 1;
-        group1.jaccard =
-          group1.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group1.count = n;
-      } else {
-        const newGroup1 = {
-          year: year1,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup1);
-      }
-      const group2 = result.find((group) => group.year === year2);
-      if (group2) {
-        const n = group2.count + 1;
-        group2.jaccard =
-          group2.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group2.count = n;
-      } else {
-        const newGroup2 = {
-          year: year2,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup2);
-      }
-      return result;
-    }, []);
-
-  // Within-platform Jaccard index by platform and year
-  const withinPlatformByPlatformAndYear = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 === item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce((result, item) => {
-      const platform = item.platform1;
-      const year1 = new Date(item.date1).getFullYear();
-      const year2 = new Date(item.date2).getFullYear();
-      const group1 = result.find((group) => {
-        return group.platform === platform && group.year === year1;
-      });
-      if (group1) {
-        const n = group1.count + 1;
-        group1.jaccard =
-          group1.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group1.count = n;
-      } else {
-        const newGroup1 = {
-          platform,
-          year: year1,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup1);
-      }
-      const group2 = result.find((group) => {
-        return group.platform === platform && group.year === year2;
-      });
-      if (group2) {
-        const n = group2.count + 1;
-        group2.jaccard =
-          group2.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group2.count = n;
-      } else {
-        const newGroup2 = {
-          platform,
-          year: year2,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup2);
-      }
-      return result;
-    }, []);
-
-  // Between-platform Jaccard index by platform and year
-  const betweenPlatformByPlatformAndYear = input
-    .filter((item) => {
-      const timeGap = Math.abs(
-        new Date(item.date1).getTime() - new Date(item.date2).getTime()
-      );
-      return item.platform1 !== item.platform2 &&
-        timeGap < 1000 * 60 * 60 * 24 * 365
-        ? true
-        : false;
-    })
-    .reduce((result, item) => {
-      const platform = item.platform1;
-      const year1 = new Date(item.date1).getFullYear();
-      const year2 = new Date(item.date2).getFullYear();
-      const group1 = result.find((group) => {
-        return group.platform === platform && group.year === year1;
-      });
-      if (group1) {
-        const n = group1.count + 1;
-        group1.jaccard =
-          group1.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group1.count = n;
-      } else {
-        const newGroup1 = {
-          platform,
-          year: year1,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup1);
-      }
-      const group2 = result.find((group) => {
-        return group.platform === platform && group.year === year2;
-      });
-      if (group2) {
-        const n = group2.count + 1;
-        group2.jaccard =
-          group2.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-        group2.count = n;
-      } else {
-        const newGroup2 = {
-          platform,
-          year: year2,
-          count: 1,
-          jaccard: item.jaccard,
-        };
-        result.push(newGroup2);
-      }
-      return result;
-    }, []);
-
-  // Platform-to-platform Jaccard index
-  const platformToPlatform = platforms
-    .reduce((result, item, index, array) => {
-      for (let i = index + 1; i < array.length; i++) {
-        result.push([item, array[i]]);
-      }
-      return result;
-    }, [])
-    .map((combination) => {
-      return {
-        platforms: combination,
-        data: input
-          .filter((item) => {
-            return (item.platform1 === combination[0] &&
-              item.platform2 === combination[1]) ||
-              (item.platform1 === combination[1] &&
-                item.platform2 === combination[0])
-              ? true
-              : false;
-          })
-          .filter((item) => {
-            const timeGap = Math.abs(
-              new Date(item.date1).getTime() - new Date(item.date2).getTime()
-            );
-            return timeGap < 1000 * 60 * 60 * 24 * 365 ? true : false;
-          })
-          .reduce(
-            (result, item, index) => {
-              const n = index + 1;
-              result.jaccard =
-                result.jaccard * (index / n) + item.jaccard * (1 / n);
-              result.count++;
-              return result;
-            },
-            { count: 0, jaccard: 0 }
-          ),
-      };
-    });
-
-  // Platform-to-platform Jaccard index by year
-  const platformToPlatformByYear = platforms
-    .reduce((result, item, index, array) => {
-      for (let i = index + 1; i < array.length; i++) {
-        result.push([item, array[i]]);
-      }
-      return result;
-    }, [])
-    .map((combination) => {
-      return {
-        platforms: combination,
-        data: input
-          .filter((item) => {
-            return (item.platform1 === combination[0] &&
-              item.platform2 === combination[1]) ||
-              (item.platform1 === combination[1] &&
-                item.platform2 === combination[0])
-              ? true
-              : false;
-          })
-          .filter((item) => {
-            const timeGap = Math.abs(
-              new Date(item.date1).getTime() - new Date(item.date2).getTime()
-            );
-            return timeGap < 1000 * 60 * 60 * 24 * 365 ? true : false;
-          })
-          .reduce((result, item) => {
-            const year1 = new Date(item.date1).getFullYear();
-            const year2 = new Date(item.date2).getFullYear();
-            const group1 = result.find((group) => group.year === year1);
-            if (group1) {
-              const n = group1.count + 1;
-              group1.jaccard =
-                group1.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-              group1.count = n;
-            } else {
-              const newGroup1 = {
-                year: year1,
-                count: 1,
-                jaccard: item.jaccard,
-              };
-              result.push(newGroup1);
-            }
-            const group2 = result.find((group) => group.year === year2);
-            if (group2) {
-              const n = group2.count + 1;
-              group2.jaccard =
-                group2.jaccard * ((n - 1) / n) + item.jaccard * (1 / n);
-              group2.count = n;
-            } else {
-              const newGroup2 = {
-                year: year2,
-                count: 1,
-                jaccard: item.jaccard,
-              };
-              result.push(newGroup2);
-            }
-            return result;
-          }, []),
-      };
-    });
-
-  const output = {
-    withinPlatform,
-    betweenPlatform,
-    withinPlatformByPlatform,
-    betweenPlatformByPlatform,
-    withinPlatformByYear,
-    betweenPlatformByYear,
-    withinPlatformByPlatformAndYear,
-    betweenPlatformByPlatformAndYear,
-    platformToPlatform,
-    platformToPlatformByYear,
-  };
-
-  await write("./output/08-data-analysis.json", JSON.stringify(output));
 };
 
 // getPosts();
