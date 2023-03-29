@@ -466,160 +466,112 @@ const analyzeTextSimilarities = async () => {
     2004,
     2003,
   ];
-  const months = [null, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  const timeframes = [null, 365, 91, 30];
+  const timeframes = [null, 91, 183, 274, 365, 456, 584, 639, 730];
 
   // 4. Create output target object
 
   // 5. Loop through segmentation criteria combinations
+  const output = [];
   for (const platform of platforms) {
-    const output = [];
     for (const basePlatform of platforms) {
       for (const year of years) {
-        for (const month of months) {
-          if (month === null || year !== null) {
-            for (const timeframe of timeframes) {
-              // 5.1 Extract Jaccard Index values from data
-              const values = input
-                .filter((item) => {
-                  return platform === null || item.platform.includes(platform)
-                    ? true
-                    : false;
-                })
-                .filter((item) => {
-                  return basePlatform === null ||
-                    item.basePlatform.includes(basePlatform)
-                    ? true
-                    : false;
-                })
-                .filter((item) => {
-                  return year === null || item.date.getFullYear() === year
-                    ? true
-                    : false;
-                })
-                .filter((item) => {
-                  return year === null ||
-                    month === null ||
-                    item.date.getMonth() === month
-                    ? true
-                    : false;
-                })
-                .filter((item) => {
-                  return timeframe === null ||
-                    item.date.getTime() - item.baseDate.getTime() <
-                      timeframe * 24 * 60 * 60 * 1000
-                    ? true
-                    : false;
-                })
-                .map((item) => item.jaccard)
-                .sort((a, b) => a - b);
+        for (const timeframe of timeframes) {
+          // 5.1 Extract Jaccard Index values from data
+          const values = input
+            .filter((item) => {
+              return platform === null || item.platform.includes(platform)
+                ? true
+                : false;
+            })
+            .filter((item) => {
+              return basePlatform === null ||
+                item.basePlatform.includes(basePlatform)
+                ? true
+                : false;
+            })
+            .filter((item) => {
+              return year === null || item.date.getFullYear() === year
+                ? true
+                : false;
+            })
+            .filter((item) => {
+              return timeframe === null ||
+                item.date.getTime() - item.baseDate.getTime() <
+                  timeframe * 24 * 60 * 60 * 1000
+                ? true
+                : false;
+            })
+            .map((item) => item.jaccard)
+            .sort((a, b) => a - b);
 
-              // 5.2 Compute mean
-              const mean = values.reduce((result, value, index) => {
-                const n = index + 1;
-                return (1 / n) * value + ((n - 1) / n) * result;
-              }, 0);
+          // 5.2 Compute mean
+          const mean = values.reduce((result, value, index) => {
+            const n = index + 1;
+            return (1 / n) * value + ((n - 1) / n) * result;
+          }, 0);
 
-              // 5.3 Compute sample size
-              const sampleSize = values.length;
+          // 5.3 Compute sample size
+          const sampleSize = values.length;
 
-              // 5.4 Compute standard deviation
-              const standardDeviation = Math.sqrt(
-                values.reduce((result, value) => {
-                  const meanDeviation = value - mean;
-                  return result + meanDeviation * meanDeviation;
-                }, 0) /
-                  (sampleSize - 1)
-              );
+          // 5.4 Compute standard deviation
+          const standardDeviation = Math.sqrt(
+            values.reduce((result, value) => {
+              const meanDeviation = value - mean;
+              return result + meanDeviation * meanDeviation;
+            }, 0) /
+              (sampleSize - 1)
+          );
 
-              // 5.5 Compute quartiles
-              const quartile1 = values[Math.round((1 * sampleSize) / 4) - 1];
-              const median = values[Math.round((2 * sampleSize) / 4) - 1];
-              const quartile3 = values[Math.round((3 * sampleSize) / 4) - 1];
+          // 5.5 Compute quartiles
+          const quartile1 = values[Math.round((1 * sampleSize) / 4) - 1];
+          const median = values[Math.round((2 * sampleSize) / 4) - 1];
+          const quartile3 = values[Math.round((3 * sampleSize) / 4) - 1];
 
-              // 5.6 Compute histogram
-              const minimum = values[0];
-              const maximum = values[sampleSize - 1];
-              const range = maximum - minimum;
-              const numberOfGroups = 10;
-              const groupsStep = range / numberOfGroups;
-              const histogram = [];
-              for (let i = 0; i < numberOfGroups; i++) {
-                const groupMaximum = minimum + (i + 1) * groupsStep;
-                const groupN = i
-                  ? values.filter((value) => value <= groupMaximum).length -
-                    histogram.reduce((result, value) => result + value)
-                  : values.filter((value) => value <= groupMaximum).length;
-                histogram.push(groupN);
-              }
-
-              // 5.7 Create output item
-              const outputItem = {
-                platform: platform === null ? "All" : platform,
-                basePlatform: basePlatform === null ? "All" : basePlatform,
-                year: year === null ? "All" : year.toString(),
-                month:
-                  month === null
-                    ? "Full Year"
-                    : month === 0
-                    ? "January"
-                    : month === 1
-                    ? "February"
-                    : month === 2
-                    ? "March"
-                    : month === 3
-                    ? "April"
-                    : month === 4
-                    ? "May"
-                    : month === 5
-                    ? "June"
-                    : month === 6
-                    ? "July"
-                    : month === 7
-                    ? "August"
-                    : month === 8
-                    ? "September"
-                    : month === 9
-                    ? "October"
-                    : month === 10
-                    ? "November"
-                    : month === 11
-                    ? "December"
-                    : "",
-                timeframe:
-                  timeframe === 365
-                    ? "Yearly"
-                    : timeframe === 91
-                    ? "Quarterly"
-                    : timeframe === 30
-                    ? "Monthly"
-                    : "All-time",
-                mean,
-                sampleSize,
-                standardDeviation,
-                quartile1,
-                median,
-                quartile3,
-                histogram,
-              };
-
-              if (outputItem.sampleSize > 0) {
-                output.push(outputItem);
-              }
-
-              const textUpdate = `Platform: ${outputItem.platform} / Base Platform: ${outputItem.basePlatform} / Date range: ${outputItem.month} ${outputItem.year} / Timeframe: ${outputItem.timeframe}`;
-              console.log(textUpdate);
-            }
+          // 5.6 Compute histogram
+          const minimum = values[0];
+          const maximum = values[sampleSize - 1];
+          const range = maximum - minimum;
+          const numberOfGroups = 10;
+          const groupsStep = range / numberOfGroups;
+          const histogram = [];
+          for (let i = 0; i < numberOfGroups; i++) {
+            const groupMaximum = minimum + (i + 1) * groupsStep;
+            const groupN = i
+              ? values.filter((value) => value <= groupMaximum).length -
+                histogram.reduce((result, value) => result + value)
+              : values.filter((value) => value <= groupMaximum).length;
+            histogram.push(groupN);
           }
+
+          // 5.7 Create output item
+          const outputItem = {
+            platform: platform === null ? "All" : platform,
+            basePlatform: basePlatform === null ? "All" : basePlatform,
+            year: year === null ? "All-time" : year.toString(),
+            timeframe: timeframe === null ? "All-time" : timeframe + " days",
+            mean: typeof mean === "number" ? mean : "N/A",
+            sampleSize: typeof sampleSize === "number" ? sampleSize : "N/A",
+            standardDeviation:
+              typeof standardDeviation === "number" ? standardDeviation : "N/A",
+            quartile1: typeof quartile1 === "number" ? quartile1 : "N/A",
+            median: typeof median === "number" ? median : "N/A",
+            quartile3: typeof quartile3 === "number" ? quartile3 : "N/A",
+            histogram: Array.isArray(histogram) ? histogram : [],
+          };
+
+          if (outputItem.sampleSize > 0) {
+            output.push(outputItem);
+          }
+
+          const textUpdate = `Platform: ${outputItem.platform} / Base Platform: ${outputItem.basePlatform} / Date range: ${outputItem.year} / Timeframe: ${outputItem.timeframe}`;
+          console.log(textUpdate);
         }
       }
     }
-    const filePath = platform
-      ? "./output/08-data-analysis-" + platform.toLowerCase() + ".json"
-      : "./output/08-data-analysis-all.json";
-    const fileData = JSON.stringify(output);
-    await write(filePath, fileData);
   }
+  const filePath = "./output/08-data-analysis-" + Date.now() + ".json";
+  const fileData = JSON.stringify(output);
+  await write(filePath, fileData);
 };
 
 // getPosts();
