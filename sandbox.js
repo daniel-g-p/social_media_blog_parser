@@ -4,7 +4,7 @@ import write from "./utilities/write.js";
 import aoaToXlsx from "./utilities/aoa-to-xlsx.js";
 
 const init = async () => {
-  const input = await read("./output/08-data-analysis.json")
+  const input = await read("./output/08-data-analysis-2.json")
     .then((res) => JSON.parse(res))
     .catch((error) => {
       console.log(error);
@@ -61,7 +61,7 @@ const init = async () => {
       item.histogram[10],
     ];
   });
-  aoaToXlsx("./output/08-data-analysis.xlsx", [columns, ...rows]);
+  aoaToXlsx("./output/08-data-analysis-2.xlsx", [columns, ...rows]);
 };
 
 init();
