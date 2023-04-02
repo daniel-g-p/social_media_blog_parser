@@ -428,6 +428,16 @@ const analyzeTextSimilarities = async () => {
         jaccard: item.jaccard,
       };
     });
+  const inputBetween = input.filter((item) => {
+    return item.platform.some((platform) => {
+      return !item.basePlatform.includes(platform);
+    });
+  });
+  const inputWithin = input.filter((item) => {
+    return item.platform.every((platform) => {
+      return item.basePlatform.includes(platform);
+    });
+  });
 
   // 3. Define segmentation criteria for analysis
   const platforms = [
@@ -469,15 +479,15 @@ const analyzeTextSimilarities = async () => {
   const timeframes = [null, 91, 183, 274, 365, 456, 584, 639, 730];
 
   // 4. Create output target object
-
-  // 5. Loop through segmentation criteria combinations
   const output = [];
+
+  // 5. Loop through segmentation criteria combinations (between platforms)
   for (const platform of platforms) {
     for (const basePlatform of platforms) {
       for (const year of years) {
         for (const timeframe of timeframes) {
           // 5.1 Extract Jaccard Index values from data
-          const values = input
+          const values = inputBetween
             .filter((item) => {
               return platform === null || item.platform.includes(platform)
                 ? true
@@ -547,6 +557,7 @@ const analyzeTextSimilarities = async () => {
           const outputItem = {
             platform: platform === null ? "All" : platform,
             basePlatform: basePlatform === null ? "All" : basePlatform,
+            scope: "Between platforms",
             year: year === null ? "All-time" : year.toString(),
             timeframe: timeframe === null ? "All-time" : timeframe + " days",
             mean: typeof mean === "number" ? mean : "N/A",
@@ -569,6 +580,100 @@ const analyzeTextSimilarities = async () => {
       }
     }
   }
+
+  // 6. Loop through segmentation criteria combinations (within platforms)
+  for (const platform of platforms) {
+    for (const year of years) {
+      for (const timeframe of timeframes) {
+        // 6.1 Extract Jaccard Index values from data
+        const values = inputWithin
+          .filter((item) => {
+            return platform === null || item.platform.includes(platform)
+              ? true
+              : false;
+          })
+          .filter((item) => {
+            return year === null || item.date.getFullYear() === year
+              ? true
+              : false;
+          })
+          .filter((item) => {
+            return timeframe === null ||
+              item.date.getTime() - item.baseDate.getTime() <
+                timeframe * 24 * 60 * 60 * 1000
+              ? true
+              : false;
+          })
+          .map((item) => item.jaccard)
+          .sort((a, b) => a - b);
+
+        // 6.2 Compute mean
+        const mean = values.reduce((result, value, index) => {
+          const n = index + 1;
+          return (1 / n) * value + ((n - 1) / n) * result;
+        }, 0);
+
+        // 6.3 Compute sample size
+        const sampleSize = values.length;
+
+        // 6.4 Compute standard deviation
+        const standardDeviation = Math.sqrt(
+          values.reduce((result, value) => {
+            const meanDeviation = value - mean;
+            return result + meanDeviation * meanDeviation;
+          }, 0) /
+            (sampleSize - 1)
+        );
+
+        // 6.5 Compute quartiles
+        const quartile1 = values[Math.round((1 * sampleSize) / 4) - 1];
+        const median = values[Math.round((2 * sampleSize) / 4) - 1];
+        const quartile3 = values[Math.round((3 * sampleSize) / 4) - 1];
+
+        // 6.6 Compute histogram
+        const minimum = values[0];
+        const maximum = values[sampleSize - 1];
+        const range = maximum - minimum;
+        const numberOfGroups = 10;
+        const groupsStep = range / numberOfGroups;
+        const histogram = [];
+        for (let i = 0; i < numberOfGroups; i++) {
+          const groupMaximum = minimum + (i + 1) * groupsStep;
+          const groupN = i
+            ? values.filter((value) => value <= groupMaximum).length -
+              histogram.reduce((result, value) => result + value)
+            : values.filter((value) => value <= groupMaximum).length;
+          histogram.push(groupN);
+        }
+
+        // 6.7 Create output item
+        const outputItem = {
+          platform: platform === null ? "All" : platform,
+          basePlatform: platform === null ? "All" : platform,
+          scope: "Within platform",
+          year: year === null ? "All-time" : year.toString(),
+          timeframe: timeframe === null ? "All-time" : timeframe + " days",
+          mean: typeof mean === "number" ? mean : "N/A",
+          sampleSize: typeof sampleSize === "number" ? sampleSize : "N/A",
+          standardDeviation:
+            typeof standardDeviation === "number" ? standardDeviation : "N/A",
+          quartile1: typeof quartile1 === "number" ? quartile1 : "N/A",
+          median: typeof median === "number" ? median : "N/A",
+          quartile3: typeof quartile3 === "number" ? quartile3 : "N/A",
+          histogram: Array.isArray(histogram) ? histogram : [],
+        };
+
+        if (outputItem.sampleSize > 0) {
+          output.push(outputItem);
+        }
+
+        const textUpdate = `Platform: ${outputItem.platform} / Base Platform: ${outputItem.basePlatform} / Date range: ${outputItem.year} / Timeframe: ${outputItem.timeframe}`;
+        console.log(textUpdate);
+      }
+    }
+  }
+
+  // 7. Export final data
   const filePath = "./output/08-data-analysis-" + Date.now() + ".json";
   const fileData = JSON.stringify(output);
   await write(filePath, fileData);
@@ -587,4 +692,4 @@ const analyzeTextSimilarities = async () => {
 // computeTextSimilarities();
 
 // // 5. UNCOMMENT THE NEXT LINE TO AGGREGATE THE COMPUTED JACCARD INDEX VALUES BY DIFFERENT SCOPES (ESTIMATED TIME: 1 HOUR)
-// analyzeTextSimilarities();
+analyzeTextSimilarities();
