@@ -54,7 +54,7 @@ const init = async () => {
   aoaToXlsx("./output/08-data-analysis-2.xlsx", [columns, ...rows]);
 };
 
-// init();
+init();
 
 // Q1: Is there a significant increase in text similarity?
 

@@ -387,7 +387,6 @@ const analyzeTextSimilarities = async () => {
 
   // 2. Format data to suit analysis operations
   const input = data
-    .filter((item) => item.platform1 !== item.platform2)
     .map((item) => {
       item.ids = [item.id1, item.id2];
       item.platforms = [item.platform1, item.platform2];
