@@ -332,15 +332,15 @@ const computeTextSimilarities = async () => {
       const id2 = combination[1];
       const item1 = input.find((item) => item.id === id1);
       const item2 = input.find((item) => item.id === id2);
-      const words1 = item1.text;
-      const words2 = item2.text;
-      const length1 = words1.length;
-      const length2 = words2.length;
-      const union = length1 + length2;
-      const intersection =
-        (words1.filter((word) => words2.includes(word)).length +
-          words2.filter((word) => words1.includes(word)).length) /
-        2;
+      const words1 = item1.text.slice(0);
+      const words2 = item2.text.slice(0);
+      const intersection = [...words1, ...words2].filter((word) => {
+        return words1.includes(word) && words2.includes(word);
+      }).length;
+      const union =
+        intersection +
+        words1.filter((word) => !words2.includes(word)).length +
+        words2.filter((word) => !words1.includes(word)).length;
       const jaccard = intersection / union;
       const outputItem = {
         id1,
@@ -356,7 +356,7 @@ const computeTextSimilarities = async () => {
       output.push(outputItem);
     }
     await write(
-      "./output/07-data-similarities-batch-" + (batchIndex + 1) + ".json",
+      "./output/07-data-similarities-batch-2-" + (batchIndex + 1) + ".json",
       JSON.stringify(output)
     )
       .then(() => {
