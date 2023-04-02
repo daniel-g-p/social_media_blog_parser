@@ -578,4 +578,4 @@ const analyzeTextSimilarities = async () => {
 // getPostsText();
 // filterProductNewsItems();
 // computeTextSimilarities();
-// analyzeTextSimilarities();
+analyzeTextSimilarities();
