@@ -356,7 +356,7 @@ const computeTextSimilarities = async () => {
       output.push(outputItem);
     }
     await write(
-      "./output/07-data-similarities-batch-2-" + (batchIndex + 1) + ".json",
+      "./output/07-data-similarities-" + (batchIndex + 1) + ".json",
       JSON.stringify(output)
     )
       .then(() => {
@@ -574,8 +574,17 @@ const analyzeTextSimilarities = async () => {
   await write(filePath, fileData);
 };
 
+// // 1. UNCOMMENT THE NEXT LINE TO CRAWL ALL NEWSROOMS AND GENERATE A LIST OF POST URLS (ESTIMATED TIME: 1 HOUR)
 // getPosts();
+
+// // 2. UNCOMMENT THE NEXT LINE TO SCRAPE ALL URLS GATHERED IN STEP 1 (ESTIMATED TIME: 6 HOURS)
 // getPostsText();
+
+// // 3. UNCOMMENT THE NEXT LINE TO FILTER ALL GATHERED NEWSROOM POSTS BY THE CATGORY "PRODUCT" (ESTIMATED TIME: 1 MINUTE)
 // filterProductNewsItems();
+
+// // 4. UNCOMMENT THE NEXT LINE TO COMPUTE THE JACCARD INDEX FOR ALL POSSIBLE COMBINATIONS OF TWO POSTS (ESTIMATED TIME: 15 MINUTES)
 // computeTextSimilarities();
-analyzeTextSimilarities();
+
+// // 5. UNCOMMENT THE NEXT LINE TO AGGREGATE THE COMPUTED JACCARD INDEX VALUES BY DIFFERENT SCOPES (ESTIMATED TIME: 1 HOUR)
+// analyzeTextSimilarities();
