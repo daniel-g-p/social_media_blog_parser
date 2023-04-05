@@ -12,6 +12,7 @@ import youtube from "./modules/youtube.js";
 
 import read from "./utilities/read.js";
 import write from "./utilities/write.js";
+import aoaToXlsx from "./utilities/aoa-to-xlsx.js";
 
 const getPosts = async () => {
   // Facebook
@@ -556,22 +557,27 @@ const analyzeTextSimilarities = async () => {
           const outputItem = {
             platform: platform === null ? "All" : platform,
             basePlatform: basePlatform === null ? "All" : basePlatform,
-            scope: "Between platforms",
+            scope: "Between platform",
             year: year === null ? "All-time" : year.toString(),
             timeframe: timeframe === null ? "All-time" : timeframe + " days",
-            mean: typeof mean === "number" ? mean : "N/A",
-            sampleSize: typeof sampleSize === "number" ? sampleSize : "N/A",
+            mean: typeof mean === "number" && mean ? mean : "N/A",
+            sampleSize:
+              typeof sampleSize === "number" && sampleSize ? sampleSize : "N/A",
             standardDeviation:
-              typeof standardDeviation === "number" ? standardDeviation : "N/A",
-            quartile1: typeof quartile1 === "number" ? quartile1 : "N/A",
-            median: typeof median === "number" ? median : "N/A",
-            quartile3: typeof quartile3 === "number" ? quartile3 : "N/A",
+              typeof standardDeviation === "number" && standardDeviation
+                ? standardDeviation
+                : "N/A",
+            quartile1:
+              typeof quartile1 === "number" && quartile1 ? quartile1 : "N/A",
+            median: typeof median === "number" && median ? median : "N/A",
+            quartile3:
+              typeof quartile3 === "number" && quartile3 ? quartile3 : "N/A",
             histogram: Array.isArray(histogram) ? histogram : [],
           };
 
-          if (outputItem.sampleSize > 0) {
-            output.push(outputItem);
-          }
+          // if (outputItem.sampleSize > 0) {
+          output.push(outputItem);
+          // }
 
           const textUpdate = `Platform: ${outputItem.platform} / Base Platform: ${outputItem.basePlatform} / Date range: ${outputItem.year} / Timeframe: ${outputItem.timeframe}`;
           console.log(textUpdate);
@@ -652,19 +658,24 @@ const analyzeTextSimilarities = async () => {
           scope: "Within platform",
           year: year === null ? "All-time" : year.toString(),
           timeframe: timeframe === null ? "All-time" : timeframe + " days",
-          mean: typeof mean === "number" ? mean : "N/A",
-          sampleSize: typeof sampleSize === "number" ? sampleSize : "N/A",
+          mean: typeof mean === "number" && mean ? mean : "N/A",
+          sampleSize:
+            typeof sampleSize === "number" && sampleSize ? sampleSize : "N/A",
           standardDeviation:
-            typeof standardDeviation === "number" ? standardDeviation : "N/A",
-          quartile1: typeof quartile1 === "number" ? quartile1 : "N/A",
-          median: typeof median === "number" ? median : "N/A",
-          quartile3: typeof quartile3 === "number" ? quartile3 : "N/A",
+            typeof standardDeviation === "number" && standardDeviation
+              ? standardDeviation
+              : "N/A",
+          quartile1:
+            typeof quartile1 === "number" && quartile1 ? quartile1 : "N/A",
+          median: typeof median === "number" && median ? median : "N/A",
+          quartile3:
+            typeof quartile3 === "number" && quartile3 ? quartile3 : "N/A",
           histogram: Array.isArray(histogram) ? histogram : [],
         };
 
-        if (outputItem.sampleSize > 0) {
-          output.push(outputItem);
-        }
+        // if (outputItem.sampleSize > 0) {
+        output.push(outputItem);
+        // }
 
         const textUpdate = `Platform: ${outputItem.platform} / Base Platform: ${outputItem.basePlatform} / Date range: ${outputItem.year} / Timeframe: ${outputItem.timeframe}`;
         console.log(textUpdate);
@@ -676,6 +687,305 @@ const analyzeTextSimilarities = async () => {
   const filePath = "./output/08-data-analysis-" + Date.now() + ".json";
   const fileData = JSON.stringify(output);
   await write(filePath, fileData);
+};
+
+const generateInsights = async () => {
+  const input = await read("./output/08-data-analysis-3.json")
+    .then((res) => JSON.parse(res))
+    .catch((error) => {
+      console.log(error);
+      return [];
+    });
+
+  const q1 = async () => {
+    const output = input
+      .filter((item) => {
+        return item.platform === "All" &&
+          item.basePlatform === "All" &&
+          item.scope === "Between platform" &&
+          item.year !== "All-time" &&
+          item.timeframe === "365 days"
+          ? true
+          : false;
+      })
+      .map((item) => {
+        return { year: item.year, jaccardIndex: item.mean };
+      })
+      .sort((a, b) => a.year - b.year);
+    const filePath = "./output/09-data-insights-1.json";
+    const fileData = JSON.stringify(output);
+    await write(filePath, fileData);
+    const aoaColumns = ["Year", "Jaccard Index"];
+    const aoaRows = output.map((item) => [item.year, item.jaccardIndex]);
+    const aoa = [aoaColumns, ...aoaRows];
+    aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
+  };
+
+  const q2 = async () => {
+    const yearGroups = [
+      [2005, 2009],
+      [2010, 2014],
+      [2015, 2019],
+      [2020, 2023],
+      [2005, 2023],
+    ];
+    const platforms = [
+      "Facebook",
+      "Instagram",
+      "LinkedIn",
+      "Pinterest",
+      "Reddit",
+      "TikTok",
+      "Twitter",
+      "WhatsApp",
+      "YouTube",
+    ];
+    const output = yearGroups.map((yearGroup) => {
+      return {
+        years: yearGroup,
+        data: platforms.map((platform) => {
+          return {
+            platform,
+            jaccardIndex: input
+              .filter((item) => {
+                return item.platform === "All" &&
+                  item.basePlatform === platform &&
+                  item.scope === "Between platform" &&
+                  item.year >= yearGroup[0] &&
+                  item.year <= yearGroup[1] &&
+                  item.timeframe === "365 days" &&
+                  item.mean !== "N/A"
+                  ? true
+                  : false;
+              })
+              .map((item) => item.mean)
+              .reduce((result, value, index) => {
+                const n = index + 1;
+                return (1 / n) * value + ((n - 1) / n) * result;
+              }, 0),
+          };
+        }),
+      };
+    });
+    const filePath = "./output/09-data-insights-2.json";
+    const fileData = JSON.stringify(output);
+    await write(filePath, fileData);
+    const aoaColumns = [
+      "Platform",
+      ...output.map((item) => item.years[0] + "-" + item.years[1]),
+    ];
+    const aoaRows = platforms.map((platform) => {
+      return [
+        platform,
+        ...output.map((item1) => {
+          return item1.data.find((item2) => {
+            return item2.platform === platform;
+          }).jaccardIndex;
+        }),
+      ];
+    });
+    const aoa = [aoaColumns, ...aoaRows];
+    aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
+  };
+
+  const q3 = async () => {
+    const yearGroups = [
+      [2005, 2009],
+      [2010, 2014],
+      [2015, 2019],
+      [2020, 2023],
+      [2005, 2023],
+    ];
+    const platforms = [
+      "Facebook",
+      "Instagram",
+      "LinkedIn",
+      "Pinterest",
+      "Reddit",
+      "TikTok",
+      "Twitter",
+      "WhatsApp",
+      "YouTube",
+    ];
+    const output = yearGroups.map((yearGroup) => {
+      return {
+        years: yearGroup,
+        data: platforms.map((platform) => {
+          return {
+            platform,
+            jaccardIndex: input
+              .filter((item) => {
+                return item.platform === platform &&
+                  item.basePlatform === "All" &&
+                  item.scope === "Between platform" &&
+                  item.year >= yearGroup[0] &&
+                  item.year <= yearGroup[1] &&
+                  item.timeframe === "365 days" &&
+                  item.mean !== "N/A"
+                  ? true
+                  : false;
+              })
+              .map((item) => item.mean)
+              .reduce((result, value, index) => {
+                const n = index + 1;
+                return (1 / n) * value + ((n - 1) / n) * result;
+              }, 0),
+          };
+        }),
+      };
+    });
+    const filePath = "./output/09-data-insights-3.json";
+    const fileData = JSON.stringify(output);
+    await write(filePath, fileData);
+    const aoaColumns = [
+      "Platform",
+      ...output.map((item) => item.years[0] + "-" + item.years[1]),
+    ];
+    const aoaRows = platforms.map((platform) => {
+      return [
+        platform,
+        ...output.map((item1) => {
+          return item1.data.find((item2) => {
+            return item2.platform === platform;
+          }).jaccardIndex;
+        }),
+      ];
+    });
+    const aoa = [aoaColumns, ...aoaRows];
+    aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
+  };
+
+  const q4 = async () => {
+    const yearGroups = [
+      [2005, 2009],
+      [2010, 2014],
+      [2015, 2019],
+      [2020, 2023],
+      [2005, 2023],
+    ];
+    const platforms = [
+      "Facebook",
+      "Instagram",
+      "LinkedIn",
+      "Pinterest",
+      "Reddit",
+      "TikTok",
+      "Twitter",
+      "WhatsApp",
+      "YouTube",
+    ];
+    const output = yearGroups.map((yearGroup) => {
+      return {
+        years: yearGroup,
+        data: platforms
+          .map((platform) => {
+            return platforms.map((basePlatform) => {
+              return { platform, basePlatform };
+            });
+          })
+          .flat()
+          .filter((combination) => {
+            return combination.platform !== combination.basePlatform;
+          })
+          .map((combination) => {
+            return {
+              platform: combination.platform,
+              basePlatform: combination.basePlatform,
+              jaccardIndex: input
+                .filter((item) => {
+                  return item.platform === combination.platform &&
+                    item.basePlatform === combination.basePlatform &&
+                    item.scope === "Between platform" &&
+                    item.year >= yearGroup[0] &&
+                    item.year <= yearGroup[1] &&
+                    item.timeframe === "365 days" &&
+                    item.mean !== "N/A"
+                    ? true
+                    : false;
+                })
+                .map((item) => item.mean)
+                .reduce((result, value, index) => {
+                  const n = index + 1;
+                  return (1 / n) * value + ((n - 1) / n) * result;
+                }, 0),
+            };
+          })
+          .sort((a, b) => b.jaccardIndex - a.jaccardIndex),
+      };
+    });
+    const filePath = "./output/09-data-insights-4.json";
+    const fileData = JSON.stringify(output);
+    await write(filePath, fileData);
+    const aoaColumns = ["Years", "Platform", "Base Platform", "Jaccard Index"];
+    const aoaRows = output
+      .map((item1) => {
+        return item1.data.map((item2) => {
+          return [
+            item1.years[0] + "-" + item1.years[1],
+            item2.platform,
+            item2.basePlatform,
+            item2.jaccardIndex,
+          ];
+        });
+      })
+      .flat();
+    const aoa = [aoaColumns, ...aoaRows];
+    aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
+  };
+
+  const q5 = async () => {
+    const timeframes = [
+      "91 days",
+      "183 days",
+      "274 days",
+      "365 days",
+      "456 days",
+      "584 days",
+      "639 days",
+      "730 days",
+    ];
+    const output = timeframes.map((timeframe) => {
+      return {
+        timeframe,
+        data: input
+          .filter((item) => {
+            return item.platform === "All" &&
+              item.basePlatform === "All" &&
+              item.scope === "Between platform" &&
+              item.year !== "All-time" &&
+              item.timeframe === timeframe &&
+              item.mean !== "N/A"
+              ? true
+              : false;
+          })
+          .map((item) => {
+            return { year: +item.year, jaccardIndex: item.mean };
+          }),
+      };
+    });
+    const filePath = "./output/09-data-insights-5.json";
+    const fileData = JSON.stringify(output);
+    await write(filePath, fileData);
+    const aoaColumns = ["Year", ...output.map((item) => item.timeframe)];
+    const aoaRows = [];
+    for (let year = 2005; year <= 2023; year++) {
+      const aoaRow = [
+        year,
+        ...output.map((item1) => {
+          return item1.data.find((item2) => item2.year === year).jaccardIndex;
+        }),
+      ];
+      aoaRows.push(aoaRow);
+    }
+    const aoa = [aoaColumns, ...aoaRows];
+    aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
+  };
+
+  q1();
+  q2();
+  q3();
+  q4();
+  q5();
 };
 
 // // 1. UNCOMMENT THE NEXT LINE TO CRAWL ALL NEWSROOMS AND GENERATE A LIST OF POST URLS (ESTIMATED TIME: 1 HOUR)
@@ -691,4 +1001,7 @@ const analyzeTextSimilarities = async () => {
 // computeTextSimilarities();
 
 // // 5. UNCOMMENT THE NEXT LINE TO AGGREGATE THE COMPUTED JACCARD INDEX VALUES BY DIFFERENT SCOPES (ESTIMATED TIME: 1 HOUR)
-analyzeTextSimilarities();
+// analyzeTextSimilarities();
+
+// // 6. UNCOMMENT THE NEXT LINE TO GENERATE EXCEL INSIGHTS FOR THE 5 UNDERLYING QUESTIONS (ESTIMATED TIME: 10 SECONDS)
+generateInsights();
