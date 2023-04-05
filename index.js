@@ -1004,4 +1004,4 @@ const generateInsights = async () => {
 // analyzeTextSimilarities();
 
 // // 6. UNCOMMENT THE NEXT LINE TO GENERATE EXCEL INSIGHTS FOR THE 5 UNDERLYING QUESTIONS (ESTIMATED TIME: 10 SECONDS)
-generateInsights();
+// generateInsights();
