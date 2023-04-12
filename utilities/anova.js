@@ -30,14 +30,35 @@ export default (population, samples) => {
   const errorMeanSquares = errorSumOfSquares / errorDegreesOfFreedom;
   const fStatistic = meanSquares / errorMeanSquares;
   return {
-    sumOfSquares,
-    errorSumOfSquares,
-    totalSumOfSquares,
-    degreesOfFreedom,
-    errorDegreesOfFreedom,
-    totalDegreesOfFreedom,
-    meanSquares,
-    errorMeanSquares,
-    fStatistic,
+    sumOfSquares:
+      typeof sumOfSquares === "number" && sumOfSquares ? sumOfSquares : "N/A",
+    errorSumOfSquares:
+      typeof errorSumOfSquares === "number" && errorSumOfSquares
+        ? errorSumOfSquares
+        : "N/A",
+    totalSumOfSquares:
+      typeof totalSumOfSquares === "number" && totalSumOfSquares
+        ? totalSumOfSquares
+        : "N/A",
+    degreesOfFreedom:
+      typeof degreesOfFreedom === "number" && degreesOfFreedom
+        ? degreesOfFreedom
+        : "N/A",
+    errorDegreesOfFreedom:
+      typeof errorDegreesOfFreedom === "number" && errorDegreesOfFreedom
+        ? errorDegreesOfFreedom
+        : "N/A",
+    totalDegreesOfFreedom:
+      typeof totalDegreesOfFreedom === "number" && totalDegreesOfFreedom
+        ? totalDegreesOfFreedom
+        : "N/A",
+    meanSquares:
+      typeof meanSquares === "number" && meanSquares ? meanSquares : "N/A",
+    errorMeanSquares:
+      typeof errorMeanSquares === "number" && errorMeanSquares
+        ? errorMeanSquares
+        : "N/A",
+    fStatistic:
+      typeof fStatistic === "number" && fStatistic ? fStatistic : "N/A",
   };
 };

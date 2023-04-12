@@ -1,7 +1,8 @@
-import validateUrl from "../utilities/validate-url.js";
+import id from "../utilities/id.js";
 
 export default (platform, date, title, description, tags, author, url) => {
   const model = {
+    id: id(),
     platform: [
       "Facebook",
       "Instagram",
