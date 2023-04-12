@@ -1191,6 +1191,7 @@ const testSignificance = async () => {
   const fileDataQ3 = JSON.stringify(outputQ3);
   await write(filePathQ3, fileDataQ3);
   const xlsxColumns = [
+    "Year",
     "Treatment SoS",
     "Error SoS",
     "Total SoS",
@@ -1203,6 +1204,7 @@ const testSignificance = async () => {
   ];
   const xlsxRowsQ2 = outputQ2.map((item) => {
     return [
+      item.year,
       item.sumOfSquares,
       item.errorSumOfSquares,
       item.totalSumOfSquares,
@@ -1218,6 +1220,7 @@ const testSignificance = async () => {
   aoaToXlsx(filePathQ2.replace(".json", ".xlsx"), xlsxDataQ2);
   const xlsxRowsQ3 = outputQ3.map((item) => {
     return [
+      item.year,
       item.sumOfSquares,
       item.errorSumOfSquares,
       item.totalSumOfSquares,
