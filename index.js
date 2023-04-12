@@ -33,6 +33,7 @@ import aoaToXlsx from "./utilities/aoa-to-xlsx.js";
 import anova from "./utilities/anova.js";
 
 // DEFINE FUNCTIONS TO AUTOMATE THE RESEARCH PROCESS
+
 const getPosts = async () => {
   // Facebook
   const facebookItems = await facebook.getItems();
