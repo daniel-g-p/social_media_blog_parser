@@ -683,7 +683,7 @@ const analyzeTextSimilarities = async () => {
     }
   }
 
-  // 7. Export final data
+  // 7. Export final data as JSON
   const filePath = "./output/08-data-analysis-" + Date.now() + ".json";
   const fileData = JSON.stringify(output);
   await write(filePath, fileData);
@@ -933,59 +933,10 @@ const generateInsights = async () => {
     aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
   };
 
-  const q5 = async () => {
-    const timeframes = [
-      "91 days",
-      "183 days",
-      "274 days",
-      "365 days",
-      "456 days",
-      "584 days",
-      "639 days",
-      "730 days",
-    ];
-    const output = timeframes.map((timeframe) => {
-      return {
-        timeframe,
-        data: input
-          .filter((item) => {
-            return item.platform === "All" &&
-              item.basePlatform === "All" &&
-              item.scope === "Between platform" &&
-              item.year !== "All-time" &&
-              item.timeframe === timeframe &&
-              item.mean !== "N/A"
-              ? true
-              : false;
-          })
-          .map((item) => {
-            return { year: +item.year, jaccardIndex: item.mean };
-          }),
-      };
-    });
-    const filePath = "./output/09-data-insights-5.json";
-    const fileData = JSON.stringify(output);
-    await write(filePath, fileData);
-    const aoaColumns = ["Year", ...output.map((item) => item.timeframe)];
-    const aoaRows = [];
-    for (let year = 2005; year <= 2023; year++) {
-      const aoaRow = [
-        year,
-        ...output.map((item1) => {
-          return item1.data.find((item2) => item2.year === year).jaccardIndex;
-        }),
-      ];
-      aoaRows.push(aoaRow);
-    }
-    const aoa = [aoaColumns, ...aoaRows];
-    aoaToXlsx(filePath.replace(".json", ".xlsx"), aoa);
-  };
-
   q1();
   q2();
   q3();
   q4();
-  q5();
 };
 
 // // 1. UNCOMMENT THE NEXT LINE TO CRAWL ALL NEWSROOMS AND GENERATE A LIST OF POST URLS (ESTIMATED TIME: 1 HOUR)
