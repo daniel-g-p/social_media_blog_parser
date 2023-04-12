@@ -1,20 +1,38 @@
+// IMPORT CUSTOM PACKAGES TO CRAWL AND SCRAP THE NEWSROOMS OF ALL SOCIAL MEDIA PLATFORMS
+
 import facebook from "./modules/facebook.js";
+
 import instagram from "./modules/instagram.js";
+
 import linkedin from "./modules/linkedin.js";
+
 import pinterest from "./modules/pinterest.js";
+
 import reddit from "./modules/reddit.js";
+
 import snapchat from "./modules/snapchat.js";
+
 import stackoverflow from "./modules/stackoverflow.js";
+
 import tiktok from "./modules/tiktok.js";
+
 import twitter from "./modules/twitter.js";
+
 import whatsapp from "./modules/whatsapp.js";
+
 import youtube from "./modules/youtube.js";
 
+// IMPORT CUSTOM MODULES TO SUPPORT WITH FILES AND STATISTICS
+
 import read from "./utilities/read.js";
+
 import write from "./utilities/write.js";
+
 import aoaToXlsx from "./utilities/aoa-to-xlsx.js";
+
 import anova from "./utilities/anova.js";
 
+// DEFINE FUNCTIONS TO AUTOMATE THE RESEARCH PROCESS
 const getPosts = async () => {
   // Facebook
   const facebookItems = await facebook.getItems();
@@ -1041,7 +1059,7 @@ const generateInsights = async () => {
 const testSignificance = async () => {
   const data = [];
   for (let i = 1; i <= 10; i++) {
-    const batch = await read("./output/07-data-similarities-" + i + ".json")
+    const batch = await read("./output/04-data-similarities-" + i + ".json")
       .then((res) => JSON.parse(res))
       .catch((error) => {
         console.log(error);
@@ -1166,10 +1184,10 @@ const testSignificance = async () => {
     outputItemQ3.year = year;
     outputQ3.push(outputItemQ3);
   }
-  const filePathQ2 = "./output/10-data-significance-q2.json";
+  const filePathQ2 = "./output/08-data-significance-q2.json";
   const fileDataQ2 = JSON.stringify(outputQ2);
   await write(filePathQ2, fileDataQ2);
-  const filePathQ3 = "./output/10-data-significance-q3.json";
+  const filePathQ3 = "./output/08-data-significance-q3.json";
   const fileDataQ3 = JSON.stringify(outputQ3);
   await write(filePathQ3, fileDataQ3);
   const xlsxColumns = [
@@ -1215,25 +1233,26 @@ const testSignificance = async () => {
   aoaToXlsx(filePathQ3.replace(".json", ".xlsx"), xlsxDataQ3);
 };
 
-testSignificance();
-
 // // 1. UNCOMMENT TO CRAWL ALL NEWSROOMS AND GENERATE A LIST OF POST URLS (2 HOURS)
 // getPosts();
 
 // // 2. UNCOMMENT TO SCRAPE ALL URLS GATHERED IN STEP 1 (6 HOURS)
 // getPostsText();
 
-// // 3. UNCOMMENT TO ASSIGN AN ID TO ALL POSTS AND LIMIT THEIR CONTENT TO LOWERCASE ALPHANUMERIC CHARACTERS (1 MINUTE)
+// // 3. UNCOMMENT TO ASSIGN AN ID TO ALL POSTS AND FORMAT THEIR CONTENT AS LOWERCASE ALPHANUMERIC CHARACTERS (1 MINUTE)
 // getPostsText();
 
 // // 4. UNCOMMENT TO FILTER ALL GATHERED NEWSROOM POSTS BY THE CATGORY "PRODUCT" (1 MINUTE)
 // filterPosts();
 
-// // 4. UNCOMMENT TO COMPUTE THE JACCARD INDEX FOR ALL POSSIBLE COMBINATIONS OF TWO POSTS (30 MINUTES)
+// // 5. UNCOMMENT TO COMPUTE THE JACCARD INDEX FOR ALL POSSIBLE COMBINATIONS OF TWO POSTS (30 MINUTES)
 // computeTextSimilarities();
 
-// // 5. UNCOMMENT TO AGGREGATE THE COMPUTED JACCARD INDEX VALUES BY DIFFERENT SCOPES (ESTIMATED TIME: 1 HOUR)
+// // 6. UNCOMMENT TO AGGREGATE THE COMPUTED JACCARD INDEX VALUES BY DIFFERENT SCOPES IN EXCEL (ESTIMATED TIME: 1 HOUR)
 // analyzeTextSimilarities();
 
-// // 6. UNCOMMENT TO GENERATE EXCEL INSIGHTS FOR THE 5 UNDERLYING QUESTIONS (ESTIMATED TIME: 10 SECONDS)
+// // 7. UNCOMMENT TO GENERATE EXCEL INSIGHTS FOR THE 4 RESEARCH QUESTIONS (ESTIMATED TIME: 10 SECONDS)
+// generateInsights();
+
+// // 8. UNCOMMENT TO TEST THE SIGNIFICANCE OF THE RESULTS FROM RESEARCH QUESTION 2 AND 3 (ESTIMATED TIME: 30 SECONDS)
 // generateInsights();
