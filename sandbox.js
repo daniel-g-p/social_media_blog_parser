@@ -6,112 +6,54 @@ import anova from "./utilities/anova.js";
 import aoaToXlsx from "./utilities/aoa-to-xlsx.js";
 
 const init = async () => {
-  const data = [];
-  for (let i = 1; i <= 10; i++) {
-    const batch = await read("./output/07-data-similarities-" + i + ".json")
-      .then((res) => JSON.parse(res))
-      .catch((error) => {
-        console.log(error);
-        return [];
-      });
-    data.push(...batch);
-  }
-  const input = data
-    .map((item) => {
-      item.ids = [item.id1, item.id2];
-      item.platforms = [item.platform1, item.platform2];
-      item.dates = [new Date(item.date1), new Date(item.date2)];
-      delete item.id1;
-      delete item.id2;
-      delete item.platform1;
-      delete item.platform2;
-      delete item.date1;
-      delete item.date2;
-      delete item.tags1;
-      delete item.tags2;
-      return item;
-    })
-    .map((item) => {
-      const index =
-        item.dates[0] > item.dates[1]
-          ? 0
-          : item.dates[0] < item.dates[1]
-          ? 1
-          : -1;
-      return {
-        ids: item.ids,
-        platform:
-          index === 0
-            ? [item.platforms[0]]
-            : index === 1
-            ? [item.platforms[1]]
-            : item.platforms,
-        basePlatform:
-          index === 0
-            ? [item.platforms[1]]
-            : index === 1
-            ? [item.platforms[0]]
-            : item.platforms,
-        date: index === 0 ? item.dates[0] : item.dates[1],
-        baseDate: index === 0 ? item.dates[1] : item.dates[0],
-        jaccard: item.jaccard,
-      };
-    })
-    .filter((item) => {
-      return item.platform.some((platform) => {
-        return !item.basePlatform.includes(platform);
-      });
+  const input = await read("./output/08-data-analysis.json")
+    .then((res) => JSON.parse(res))
+    .catch((error) => {
+      console.log(error);
+      return [];
     });
-  const platforms = [
-    "Facebook",
-    "Instagram",
-    "LinkedIn",
-    "Pinterest",
-    "Reddit",
-    "TikTok",
-    "Twitter",
-    "WhatsApp",
-    "YouTube",
+  const xlsxFilePath = "./output/08-data-analysis-new.xlsx";
+  const xlsxColumns = [
+    "Platform",
+    "Base Platform",
+    "Scope",
+    "Year",
+    "Timeframe",
+    "Mean",
+    "Standard Deviation",
+    "Median",
+    "Sample Size",
+    "1st Quartile",
+    "3rd Quartile",
+    "Histogram (Group 1)",
+    "Histogram (Group 2)",
+    "Histogram (Group 3)",
+    "Histogram (Group 4)",
+    "Histogram (Group 5)",
+    "Histogram (Group 6)",
+    "Histogram (Group 7)",
+    "Histogram (Group 8)",
+    "Histogram (Group 9)",
+    "Histogram (Group 10)",
   ];
-  const years = [2018, 2019, 2020, 2021, 2022, 2023];
-  const output = [];
-  for (const year of years) {
-    const population = input
-      .filter((item) => {
-        return item.date.getFullYear() === year ? true : false;
-      })
-      .filter((item) => {
-        return item.date.getTime() - item.baseDate.getTime() <
-          365 * 24 * 60 * 60 * 1000
-          ? true
-          : false;
-      })
-      .map((item) => item.jaccard)
-      .sort((a, b) => a - b);
-    const samples = [];
-    for (const platform of platforms) {
-      const sample = input
-        .filter((item) => {
-          return item.date.getFullYear() === year ? true : false;
-        })
-        .filter((item) => {
-          return item.date.getTime() - item.baseDate.getTime() <
-            365 * 24 * 60 * 60 * 1000
-            ? true
-            : false;
-        })
-        .filter((item) => {
-          return item.basePlatform.includes(platform) ? true : false;
-        })
-        .map((item) => item.jaccard)
-        .sort((a, b) => a - b);
-      samples.push(sample);
-    }
-    const outputItem = anova(population, samples);
-    outputItem.year = year;
-    output.push(outputItem);
-  }
-  console.log(output);
+  const xlsxRows = input.map((item) => {
+    return [
+      item.platform,
+      item.basePlatform,
+      item.scope,
+      item.year,
+      item.timeframe,
+      item.mean,
+      item.standardDeviation,
+      item.median,
+      item.sampleSize,
+      item.quartile1,
+      item.quartile3,
+      ...item.histogram,
+    ];
+  });
+  const xlsxData = [xlsxColumns, ...xlsxRows];
+  aoaToXlsx(xlsxFilePath, xlsxData);
 };
 
 // init2();
