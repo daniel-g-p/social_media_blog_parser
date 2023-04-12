@@ -826,7 +826,7 @@ const generateInsights = async () => {
         return { year: item.year, jaccardIndex: item.mean };
       })
       .sort((a, b) => a.year - b.year);
-    const filePath = "./output/07-data-insights-q1.json";
+    const filePath = "./output/07-data-insights-1.json";
     const fileData = JSON.stringify(output);
     await write(filePath, fileData);
     const aoaColumns = ["Year", "Jaccard Index"];
@@ -882,7 +882,7 @@ const generateInsights = async () => {
         }),
       };
     });
-    const filePath = "./output/07-data-insights-q2.json";
+    const filePath = "./output/07-data-insights-2.json";
     const fileData = JSON.stringify(output);
     await write(filePath, fileData);
     const aoaColumns = [
@@ -950,7 +950,7 @@ const generateInsights = async () => {
         }),
       };
     });
-    const filePath = "./output/07-data-insights-q3.json";
+    const filePath = "./output/07-data-insights-3.json";
     const fileData = JSON.stringify(output);
     await write(filePath, fileData);
     const aoaColumns = [
@@ -1030,7 +1030,7 @@ const generateInsights = async () => {
           .sort((a, b) => b.jaccardIndex - a.jaccardIndex),
       };
     });
-    const filePath = "./output/07-data-insights-q4.json";
+    const filePath = "./output/07-data-insights-4.json";
     const fileData = JSON.stringify(output);
     await write(filePath, fileData);
     const aoaColumns = ["Years", "Platform", "Base Platform", "Jaccard Index"];
@@ -1059,7 +1059,7 @@ const generateInsights = async () => {
 const testSignificance = async () => {
   const data = [];
   for (let i = 1; i <= 10; i++) {
-    const batch = await read("./output/04-data-similarities-" + i + ".json")
+    const batch = await read("./output/05-data-similarities-" + i + ".json")
       .then((res) => JSON.parse(res))
       .catch((error) => {
         console.log(error);
@@ -1125,8 +1125,8 @@ const testSignificance = async () => {
     "YouTube",
   ];
   const years = [
-    2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014,
-    2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023,
+    2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015, 2014, 2013, 2012,
+    2011, 2010, 2009, 2008, 2007, 2006, 2005, 2004, 2003,
   ];
 
   const outputQ2 = [];
@@ -1184,10 +1184,10 @@ const testSignificance = async () => {
     outputItemQ3.year = year;
     outputQ3.push(outputItemQ3);
   }
-  const filePathQ2 = "./output/08-data-significance-q2.json";
+  const filePathQ2 = "./output/08-data-significance-2.json";
   const fileDataQ2 = JSON.stringify(outputQ2);
   await write(filePathQ2, fileDataQ2);
-  const filePathQ3 = "./output/08-data-significance-q3.json";
+  const filePathQ3 = "./output/08-data-significance-3.json";
   const fileDataQ3 = JSON.stringify(outputQ3);
   await write(filePathQ3, fileDataQ3);
   const xlsxColumns = [
@@ -1257,5 +1257,5 @@ const testSignificance = async () => {
 // // 7. UNCOMMENT TO GENERATE EXCEL INSIGHTS FOR THE 4 RESEARCH QUESTIONS (ESTIMATED TIME: 10 SECONDS)
 // generateInsights();
 
-// // 8. UNCOMMENT TO TEST THE SIGNIFICANCE OF THE RESULTS FROM RESEARCH QUESTION 2 AND 3 (ESTIMATED TIME: 30 SECONDS)
-// generateInsights();
+// 8. UNCOMMENT TO TEST THE SIGNIFICANCE OF THE RESULTS FROM RESEARCH QUESTION 2 AND 3 (ESTIMATED TIME: 30 SECONDS)
+// testSignificance();
