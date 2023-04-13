@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "sandbox": "node sandbox.js"
+    "start": "node index.js"
   },
   "author": "Daniel Giustini Perez",
   "license": "ISC",
